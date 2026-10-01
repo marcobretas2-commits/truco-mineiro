@@ -1,0 +1,1010 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truco Mineiro Online</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top, #1d5c3a 0%, #0b2418 45%, #06120c 100%);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 38px;
+            letter-spacing: 2px;
+            text-shadow: 0 3px 8px rgba(0,0,0,.5);
+        }
+
+        .logo p {
+            margin: 8px 0 0;
+            color: #d7eadc;
+            font-size: 15px;
+        }
+
+        .card {
+            background: rgba(10, 25, 17, .94);
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 20px 50px rgba(0,0,0,.45);
+        }
+
+        .card h2 {
+            margin: 0 0 22px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .field {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 14px;
+            color: #dce9df;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border-radius: 10px;
+            border: 1px solid #426b51;
+            background: #102419;
+            color: white;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #73c58d;
+            box-shadow: 0 0 0 2px rgba(115,197,141,.15);
+        }
+
+        button {
+            width: 100%;
+            border: 0;
+            border-radius: 10px;
+            padding: 13px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .btn-primary {
+            background: #d8a72b;
+            color: #1b1607;
+        }
+
+        .btn-primary:hover {
+            background: #efbd3b;
+        }
+
+        .btn-secondary {
+            background: #244b32;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #2d5c3d;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 18px;
+        }
+
+        .links button {
+            width: auto;
+            padding: 4px 6px;
+            margin: 2px 8px;
+            background: transparent;
+            color: #9bd8ad;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .links button:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .message {
+            display: none;
+            padding: 11px;
+            border-radius: 9px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .message.success {
+            display: block;
+            background: rgba(47, 150, 77, .2);
+            border: 1px solid #3e9d57;
+            color: #b9efc6;
+        }
+
+        .message.error {
+            display: block;
+            background: rgba(180, 45, 45, .2);
+            border: 1px solid #b84a4a;
+            color: #ffc2c2;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .room {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255,255,255,.1);
+        }
+
+        .room-title {
+            text-align: center;
+            margin-bottom: 12px;
+            color: #dce9df;
+            font-size: 14px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 16px;
+            color: #8fa697;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">
+        <h1>🃏 TRUCO MINEIRO</h1>
+        <p>Truco online • Amigos • IA</p>
+    </div>
+
+    <div class="card">
+
+        <!-- LOGIN -->
+        <section id="loginSection">
+
+            <h2>Entrar no jogo</h2>
+
+            <div id="loginMessage" class="message"></div>
+
+            <div class="field">
+                <label for="loginEmail">E-mail</label>
+                <input
+                    id="loginEmail"
+                    type="email"
+                    autocomplete="email"
+                    placeholder="seu@email.com"
+                >
+            </div>
+
+            <div class="field">
+                <label for="loginSenha">Senha</label>
+                <input
+                    id="loginSenha"
+                    type="password"
+                    autocomplete="current-password"
+                    placeholder="Sua senha"
+                >
+            </div>
+
+            <button class="btn-primary" onclick="fazerLogin()">
+                ENTRAR
+            </button>
+
+            <div class="links">
+                <button onclick="mostrarCadastro()">Criar conta</button>
+                <button onclick="mostrarRecuperacao()">Esqueci minha senha</button>
+            </div>
+
+        </section>
+
+
+        <!-- CADASTRO -->
+        <section id="cadastroSection" class="hidden">
+
+            <h2>Criar conta</h2>
+
+            <div id="cadastroMessage" class="message"></div>
+
+            <div class="field">
+                <label for="cadastroNome">Nome ou apelido</label>
+                <input
+                    id="cadastroNome"
+                    type="text"
+                    autocomplete="name"
+                    placeholder="Como você quer aparecer no jogo?"
+                >
+            </div>
+
+            <div class="field">
+                <label for="cadastroEmail">E-mail</label>
+                <input
+                    id="cadastroEmail"
+                    type="email"
+                    autocomplete="email"
+                    placeholder="seu@email.com"
+                >
+            </div>
+
+            <div class="field">
+                <label for="cadastroSenha">Senha</label>
+                <input
+                    id="cadastroSenha"
+                    type="password"
+                    autocomplete="new-password"
+                    placeholder="Mínimo de 6 caracteres"
+                >
+            </div>
+
+            <div class="field">
+                <label for="cadastroConfirmar">Confirmar senha</label>
+                <input
+                    id="cadastroConfirmar"
+                    type="password"
+                    autocomplete="new-password"
+                    placeholder="Digite a senha novamente"
+                >
+            </div>
+
+            <button class="btn-primary" onclick="fazerCadastro()">
+                CRIAR CONTA
+            </button>
+
+            <div class="links">
+                <button onclick="mostrarLogin()">Voltar para login</button>
+            </div>
+
+        </section>
+
+
+        <!-- RECUPERAÇÃO -->
+        <section id="recuperacaoSection" class="hidden">
+
+            <h2>Recuperar senha</h2>
+
+            <div id="recuperacaoMessage" class="message"></div>
+
+            <div id="recuperacaoEmailArea">
+
+                <div class="field">
+                    <label for="recuperacaoEmail">E-mail da conta</label>
+                    <input
+                        id="recuperacaoEmail"
+                        type="email"
+                        autocomplete="email"
+                        placeholder="seu@email.com"
+                    >
+                </div>
+
+                <button class="btn-primary" onclick="solicitarCodigo()">
+                    ENVIAR CÓDIGO
+                </button>
+
+            </div>
+
+
+            <div id="redefinicaoArea" class="hidden">
+
+                <div class="field">
+                    <label for="codigoRecuperacao">Código de recuperação</label>
+                    <input
+                        id="codigoRecuperacao"
+                        type="text"
+                        inputmode="numeric"
+                        maxlength="6"
+                        placeholder="Digite o código"
+                    >
+                </div>
+
+                <div class="field">
+                    <label for="novaSenha">Nova senha</label>
+                    <input
+                        id="novaSenha"
+                        type="password"
+                        autocomplete="new-password"
+                        placeholder="Mínimo de 6 caracteres"
+                    >
+                </div>
+
+                <div class="field">
+                    <label for="confirmarNovaSenha">Confirmar nova senha</label>
+                    <input
+                        id="confirmarNovaSenha"
+                        type="password"
+                        autocomplete="new-password"
+                        placeholder="Digite novamente"
+                    >
+                </div>
+
+                <button class="btn-primary" onclick="redefinirSenha()">
+                    ALTERAR SENHA
+                </button>
+
+            </div>
+
+
+            <div class="links">
+                <button onclick="mostrarLogin()">Voltar para login</button>
+            </div>
+
+        </section>
+
+
+        <!-- SALA -->
+        <div class="room">
+
+            <div class="room-title">
+                Já tem um código de sala?
+            </div>
+
+            <input
+                id="codigoSala"
+                type="text"
+                maxlength="10"
+                placeholder="Código da sala"
+                style="text-transform:uppercase;"
+            >
+
+            <button class="btn-secondary" onclick="entrarSala()">
+                ENTRAR NA SALA
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+        Truco Mineiro Online
+    </div>
+
+</div>
+
+
+<script>
+
+let usuarioLogado = null;
+
+
+function esconderTudo(){
+
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("cadastroSection").classList.add("hidden");
+    document.getElementById("recuperacaoSection").classList.add("hidden");
+
+}
+
+
+function mostrarLogin(){
+
+    esconderTudo();
+
+    document.getElementById("loginSection").classList.remove("hidden");
+
+}
+
+
+function mostrarCadastro(){
+
+    esconderTudo();
+
+    limparMensagem("cadastroMessage");
+
+    document.getElementById("cadastroSection").classList.remove("hidden");
+
+}
+
+
+function mostrarRecuperacao(){
+
+    esconderTudo();
+
+    limparMensagem("recuperacaoMessage");
+
+    document.getElementById("recuperacaoSection").classList.remove("hidden");
+
+}
+
+
+function mostrarMensagem(id, texto, sucesso){
+
+    const elemento = document.getElementById(id);
+
+    elemento.textContent = texto;
+
+    elemento.className = "message " + (sucesso ? "success" : "error");
+
+}
+
+
+function limparMensagem(id){
+
+    const elemento = document.getElementById(id);
+
+    elemento.textContent = "";
+
+    elemento.className = "message";
+
+}
+
+
+async function fazerLogin(){
+
+    const email = document.getElementById("loginEmail").value.trim();
+    const senha = document.getElementById("loginSenha").value;
+
+    if(!email || !senha){
+
+        mostrarMensagem(
+            "loginMessage",
+            "Informe o e-mail e a senha.",
+            false
+        );
+
+        return;
+    }
+
+
+    try{
+
+        const resposta = await fetch("/api/login", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                email: email,
+                senha: senha
+            })
+
+        });
+
+
+        const dados = await resposta.json();
+
+
+        if(!dados.ok){
+
+            mostrarMensagem(
+                "loginMessage",
+                dados.erro || "Não foi possível entrar.",
+                false
+            );
+
+            return;
+        }
+
+
+        usuarioLogado = dados.usuario;
+
+        localStorage.setItem(
+            "truco_usuario",
+            JSON.stringify(usuarioLogado)
+        );
+
+
+        mostrarMensagem(
+            "loginMessage",
+            "Login realizado! Entrando no jogo...",
+            true
+        );
+
+
+        setTimeout(() => {
+
+            entrarNoJogo();
+
+        }, 500);
+
+
+    }catch(erro){
+
+        mostrarMensagem(
+            "loginMessage",
+            "Erro de conexão com o servidor.",
+            false
+        );
+
+    }
+
+}
+
+
+async function fazerCadastro(){
+
+    const nome = document.getElementById("cadastroNome").value.trim();
+    const email = document.getElementById("cadastroEmail").value.trim();
+    const senha = document.getElementById("cadastroSenha").value;
+    const confirmar = document.getElementById("cadastroConfirmar").value;
+
+
+    if(nome.length < 2){
+
+        mostrarMensagem(
+            "cadastroMessage",
+            "Informe um nome válido.",
+            false
+        );
+
+        return;
+    }
+
+
+    if(!email.includes("@")){
+
+        mostrarMensagem(
+            "cadastroMessage",
+            "Informe um e-mail válido.",
+            false
+        );
+
+        return;
+    }
+
+
+    if(senha.length < 6){
+
+        mostrarMensagem(
+            "cadastroMessage",
+            "A senha deve ter pelo menos 6 caracteres.",
+            false
+        );
+
+        return;
+    }
+
+
+    if(senha !== confirmar){
+
+        mostrarMensagem(
+            "cadastroMessage",
+            "As senhas não são iguais.",
+            false
+        );
+
+        return;
+    }
+
+
+    try{
+
+        const resposta = await fetch("/api/cadastro", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                nome: nome,
+                email: email,
+                senha: senha
+            })
+
+        });
+
+
+        const dados = await resposta.json();
+
+
+        if(!dados.ok){
+
+            mostrarMensagem(
+                "cadastroMessage",
+                dados.erro || "Não foi possível criar a conta.",
+                false
+            );
+
+            return;
+        }
+
+
+        mostrarMensagem(
+            "cadastroMessage",
+            "Conta criada com sucesso! Você já pode entrar.",
+            true
+        );
+
+
+        document.getElementById("loginEmail").value = email;
+
+        document.getElementById("loginSenha").value = senha;
+
+
+        setTimeout(() => {
+
+            mostrarLogin();
+
+        }, 1000);
+
+
+    }catch(erro){
+
+        mostrarMensagem(
+            "cadastroMessage",
+            "Erro de conexão com o servidor.",
+            false
+        );
+
+    }
+
+}
+
+
+async function solicitarCodigo(){
+
+    const email = document
+        .getElementById("recuperacaoEmail")
+        .value
+        .trim();
+
+
+    if(!email){
+
+        mostrarMensagem(
+            "recuperacaoMessage",
+            "Informe o e-mail da conta.",
+            false
+        );
+
+        return;
+    }
+
+
+    try{
+
+        const resposta = await fetch(
+            "/api/recuperar-senha",
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    email: email
+                })
+
+            }
+        );
+
+
+        const dados = await resposta.json();
+
+
+        if(!dados.ok){
+
+            mostrarMensagem(
+                "recuperacaoMessage",
+                dados.erro || "Não foi possível gerar o código.",
+                false
+            );
+
+            return;
+        }
+
+
+        /*
+         * TEMPORÁRIO PARA TESTE.
+         *
+         * Atualmente a API devolve o código.
+         * Quando o envio por e-mail for implementado,
+         * esta parte será removida.
+         */
+
+        mostrarMensagem(
+            "recuperacaoMessage",
+            "Código gerado para teste: " + dados.codigo,
+            true
+        );
+
+
+        document
+            .getElementById("recuperacaoEmailArea")
+            .classList.add("hidden");
+
+
+        document
+            .getElementById("redefinicaoArea")
+            .classList.remove("hidden");
+
+
+    }catch(erro){
+
+        mostrarMensagem(
+            "recuperacaoMessage",
+            "Erro de conexão com o servidor.",
+            false
+        );
+
+    }
+
+}
+
+
+async function redefinirSenha(){
+
+    const email = document
+        .getElementById("recuperacaoEmail")
+        .value
+        .trim();
+
+    const codigo = document
+        .getElementById("codigoRecuperacao")
+        .value
+        .trim();
+
+    const novaSenha = document
+        .getElementById("novaSenha")
+        .value;
+
+    const confirmar = document
+        .getElementById("confirmarNovaSenha")
+        .value;
+
+
+    if(codigo.length !== 6){
+
+        mostrarMensagem(
+            "recuperacaoMessage",
+            "Digite o código de 6 números.",
+            false
+        );
+
+        return;
+    }
+
+
+    if(novaSenha.length < 6){
+
+        mostrarMensagem(
+            "recuperacaoMessage",
+            "A nova senha deve ter pelo menos 6 caracteres.",
+            false
+        );
+
+        return;
+    }
+
+
+    if(novaSenha !== confirmar){
+
+        mostrarMensagem(
+            "recuperacaoMessage",
+            "As senhas não são iguais.",
+            false
+        );
+
+        return;
+    }
+
+
+    try{
+
+        const resposta = await fetch(
+            "/api/redefinir-senha",
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    email: email,
+
+                    codigo: codigo,
+
+                    nova_senha: novaSenha
+
+                })
+
+            }
+        );
+
+
+        const dados = await resposta.json();
+
+
+        if(!dados.ok){
+
+            mostrarMensagem(
+                "recuperacaoMessage",
+                dados.erro || "Não foi possível alterar a senha.",
+                false
+            );
+
+            return;
+        }
+
+
+        mostrarMensagem(
+            "recuperacaoMessage",
+            "Senha alterada com sucesso! Você já pode entrar.",
+            true
+        );
+
+
+        setTimeout(() => {
+
+            mostrarLogin();
+
+            document.getElementById("loginEmail").value = email;
+
+            document.getElementById("loginSenha").value = "";
+
+        }, 1200);
+
+
+    }catch(erro){
+
+        mostrarMensagem(
+            "recuperacaoMessage",
+            "Erro de conexão com o servidor.",
+            false
+        );
+
+    }
+
+}
+
+
+function entrarSala(){
+
+    const codigo = document
+        .getElementById("codigoSala")
+        .value
+        .trim()
+        .toUpperCase();
+
+
+    if(!codigo){
+
+        alert("Digite o código da sala.");
+
+        return;
+    }
+
+
+    entrarNoJogo(codigo);
+
+}
+
+
+function entrarNoJogo(codigoSala = null){
+
+    const usuario = JSON.parse(
+        localStorage.getItem("truco_usuario") || "null"
+    );
+
+
+    if(!usuario){
+
+        mostrarMensagem(
+            "loginMessage",
+            "Faça login para entrar no jogo.",
+            false
+        );
+
+        return;
+    }
+
+
+    /*
+     * Por enquanto usamos o nome do usuário no parâmetro.
+     * A integração definitiva com o WebSocket será feita
+     * no próximo passo.
+     */
+
+    const nome = encodeURIComponent(usuario.nome);
+
+
+    if(codigoSala){
+
+        window.location.href =
+            "/sala/" +
+            encodeURIComponent(codigoSala) +
+            "?nome=" +
+            nome;
+
+    }else{
+
+        const codigo = gerarCodigoSala();
+
+        window.location.href =
+            "/sala/" +
+            codigo +
+            "?create=1&nome=" +
+            nome;
+
+    }
+
+}
+
+
+function gerarCodigoSala(){
+
+    const caracteres = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+    let codigo = "";
+
+    for(let i = 0; i < 6; i++){
+
+        codigo += caracteres[
+            Math.floor(Math.random() * caracteres.length)
+        ];
+
+    }
+
+    return codigo;
+
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const usuario = localStorage.getItem("truco_usuario");
+
+    if(usuario){
+
+        try{
+
+            usuarioLogado = JSON.parse(usuario);
+
+        }catch(e){
+
+            localStorage.removeItem("truco_usuario");
+
+        }
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

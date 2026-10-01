@@ -1,0 +1,2540 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Truco Mineiro Online</title>
+<link rel="stylesheet" href="/static/style.css">
+
+<style>
+/* ==============================
+   ÃREA DO JOGO
+   ============================== */
+
+.game-body {
+  min-height: 100vh;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 20px;
+}
+
+.brand {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.room-info {
+  font-size: 14px;
+}
+
+.scoreboard {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 15px auto;
+  flex-wrap: wrap;
+}
+
+.score-box {
+  min-width: 150px;
+  padding: 12px 20px;
+  border-radius: 14px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.score-box .score {
+  display: block;
+  font-size: 32px;
+  margin-top: 4px;
+}
+
+.game-area {
+  width: min(1100px, 96%);
+  margin: auto;
+}
+
+.table-area {
+  position: relative;
+  min-height: 470px;
+  border-radius: 25px;
+  padding: 20px;
+  margin-top: 15px;
+}
+
+.seat {
+  position: absolute;
+  width: 180px;
+  min-height: 80px;
+  padding: 10px;
+  border-radius: 15px;
+  text-align: center;
+  transition: .2s;
+}
+
+.seat.turn {
+  transform: scale(1.06);
+  box-shadow: 0 0 20px rgba(255,215,0,.8);
+}
+
+.seat-0 {
+  left: 50%;
+  bottom: 15px;
+  transform: translateX(-50%);
+}
+
+.seat-1 {
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.seat-2 {
+  left: 50%;
+  top: 15px;
+  transform: translateX(-50%);
+}
+
+.seat-3 {
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.player-name {
+  font-weight: 800;
+}
+
+.player-team {
+  font-size: 12px;
+  opacity: .8;
+}
+
+.hand-count {
+  margin-top: 5px;
+  font-size: 13px;
+}
+
+.table-cards {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 300px;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.played {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.played > span {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.my-hand {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 10px;
+  min-height: 145px;
+  margin: 10px auto;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 78px;
+  height: 112px;
+  background: white;
+  color: #111;
+  border-radius: 10px;
+  border: 2px solid #222;
+  box-shadow: 0 5px 12px rgba(0,0,0,.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8px;
+  box-sizing: border-box;
+  font-weight: 800;
+  user-select: none;
+}
+
+.card.playable {
+  cursor: pointer;
+  transition: .18s;
+}
+
+.card.playable:hover {
+  transform: translateY(-15px) rotate(-1deg);
+}
+
+.card .rank {
+  font-size: 22px;
+}
+
+.card .suit {
+  font-size: 28px;
+  text-align: center;
+}
+
+.card.back {
+  background: repeating-linear-gradient(
+    45deg,
+    #222,
+    #222 7px,
+    #555 7px,
+    #555 14px
+  );
+  border-color: #111;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 12px auto;
+}
+
+.actions button {
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 18px;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.actions button:hover {
+  transform: translateY(-1px);
+}
+
+.actions .danger {
+  background: #b51d2a;
+  color: white;
+}
+
+.actions .success {
+  background: #168a45;
+  color: white;
+}
+
+.actions .mao11 {
+  background: #d98b00;
+  color: white;
+}
+
+.signal-panel {
+  width: min(760px, 94%);
+  margin: 10px auto;
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(0,0,0,.30);
+  text-align: center;
+}
+
+.signal-title {
+  font-size: 14px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.signal-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.signal-buttons button {
+  border: 0;
+  border-radius: 10px;
+  padding: 8px 11px;
+  cursor: pointer;
+  font-weight: 800;
+  background: rgba(255,255,255,.12);
+  color: white;
+}
+
+.signal-buttons button:hover {
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.22);
+}
+
+.signal-status {
+  margin-top: 7px;
+  font-size: 12px;
+  opacity: .75;
+  min-height: 16px;
+}
+
+.partner-signal {
+  position: fixed;
+  left: 50%;
+  top: 18%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  padding: 16px 24px;
+  border-radius: 18px;
+  background: rgba(20,20,20,.96);
+  border: 2px solid rgba(255,255,255,.25);
+  box-shadow: 0 12px 40px rgba(0,0,0,.45);
+  text-align: center;
+  animation: signalPop .25s ease-out;
+}
+
+.partner-signal-name {
+  font-size: 13px;
+  opacity: .75;
+  margin-bottom: 4px;
+}
+
+.partner-signal-icon {
+  font-size: 42px;
+}
+
+.partner-signal-text {
+  font-size: 20px;
+  font-weight: 900;
+}
+
+@keyframes signalPop {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(.7);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+.message {
+  min-height: 45px;
+  margin: 10px auto;
+  padding: 12px;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 800;
+}
+
+.tricks {
+  text-align: center;
+  font-size: 14px;
+  margin: 8px;
+}
+
+/* ==============================
+   MÃƒO DE 11
+   ============================== */
+
+.mao11-panel {
+  width: min(600px, 94%);
+  margin: 12px auto;
+  padding: 18px;
+  border-radius: 18px;
+  text-align: center;
+  border: 2px solid #d98b00;
+  background: rgba(217,139,0,.12);
+}
+
+.mao11-title {
+  font-size: 25px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.mao11-text {
+  margin-bottom: 12px;
+}
+
+.mao11-waiting {
+  font-size: 14px;
+  opacity: .85;
+}
+
+/* ==============================
+   ANIMAÃ‡ÃƒO NOVA MÃƒO
+   ============================== */
+
+.deal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.78);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s;
+}
+
+.deal-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.deal-box {
+  text-align: center;
+  color: white;
+}
+
+.deal-title {
+  font-size: 30px;
+  font-weight: 900;
+  margin-bottom: 20px;
+}
+
+.deck-animation {
+  width: 75px;
+  height: 105px;
+  margin: 0 auto 20px;
+  position: relative;
+}
+
+.deck-card {
+  position: absolute;
+  inset: 0;
+  width: 75px;
+  height: 105px;
+  border-radius: 10px;
+  border: 2px solid white;
+  background: repeating-linear-gradient(
+    45deg,
+    #222,
+    #222 7px,
+    #555 7px,
+    #555 14px
+  );
+  box-shadow: 0 8px 15px rgba(0,0,0,.5);
+}
+
+.deck-card:nth-child(1) {
+  transform: rotate(-8deg);
+  animation: shuffle1 .8s infinite alternate;
+}
+
+.deck-card:nth-child(2) {
+  transform: rotate(0deg);
+  animation: shuffle2 .8s .1s infinite alternate;
+}
+
+.deck-card:nth-child(3) {
+  transform: rotate(8deg);
+  animation: shuffle3 .8s .2s infinite alternate;
+}
+
+@keyframes shuffle1 {
+  from { transform: translateX(-12px) rotate(-12deg); }
+  to   { transform: translateX(12px) rotate(12deg); }
+}
+
+@keyframes shuffle2 {
+  from { transform: translateY(-8px) rotate(-4deg); }
+  to   { transform: translateY(8px) rotate(4deg); }
+}
+
+@keyframes shuffle3 {
+  from { transform: translateX(12px) rotate(12deg); }
+  to   { transform: translateX(-12px) rotate(-12deg); }
+}
+
+.deal-subtitle {
+  font-size: 16px;
+  opacity: .85;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media(max-width:700px){
+  .table-area {
+    min-height: 430px;
+  }
+
+  .seat {
+    width: 125px;
+    font-size: 12px;
+  }
+
+  .seat-1 {
+    right: 2px;
+  }
+
+  .seat-3 {
+    left: 2px;
+  }
+
+  .card {
+    width: 65px;
+    height: 95px;
+  }
+}
+
+/* ===== CARTAS DO TRUCO ===== */
+.card:not(.back) {
+  background: #ffffff !important;
+  color: #111111 !important;
+  border: 2px solid #222222 !important;
+  box-shadow: 0 6px 15px rgba(0,0,0,.35) !important;
+}
+
+.card:not(.back) .rank {
+  color: #111111 !important;
+}
+
+.card:not(.back) .suit {
+  color: #111111 !important;
+}
+
+.card.back {
+  background: repeating-linear-gradient(
+    45deg,
+    #222,
+    #222 7px,
+    #555 7px,
+    #555 14px
+  ) !important;
+  color: #fff !important;
+}
+
+</style>
+
+<style id="cartas-truco-correto">
+
+.card:not(.back){
+  width: 82px !important;
+  height: 120px !important;
+  background: #ffffff !important;
+  color: #111111 !important;
+  border: 2px solid #222222 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 5px 12px rgba(0,0,0,.35) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:not(.back).copas,
+.card:not(.back).ouros{
+  color: #d00000 !important;
+}
+
+.card:not(.back).paus,
+.card:not(.back).espadas{
+  color: #111111 !important;
+}
+
+.card:not(.back) .suit{
+  color: inherit !important;
+  font-size: 46px !important;
+  line-height: 1 !important;
+  text-align: center;
+}
+
+.card:not(.back) .rank{
+  color: inherit !important;
+  font-size: 27px !important;
+  font-weight: 900 !important;
+}
+
+.card-top{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 7px 0 7px;
+}
+
+.mini-strength{
+  font-size: 9px !important;
+  font-weight: 900 !important;
+  white-space: nowrap;
+  opacity: .8;
+}
+
+.card .bottom{
+  position: absolute;
+  bottom: 4px;
+  right: 7px;
+  transform: rotate(180deg);
+}
+
+.card.back{
+  background:
+    repeating-linear-gradient(
+      45deg,
+      #222 0px,
+      #222 7px,
+      #555 7px,
+      #555 14px
+    ) !important;
+  border: 2px solid #aaa !important;
+}
+
+.card.playable{
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+}
+
+.card.playable:hover{
+  transform: translateY(-12px);
+  box-shadow: 0 12px 22px rgba(255,255,255,.25) !important;
+}
+
+</style>
+
+
+<style id="cartas-profissionais">
+
+.card:not(.back){
+  width:82px!important;
+  height:120px!important;
+  background:#fff!important;
+  border:2px solid #222!important;
+  border-radius:10px!important;
+  position:relative!important;
+  overflow:hidden!important;
+  box-shadow:0 5px 12px rgba(0,0,0,.35)!important;
+}
+
+.card:not(.back).copas,
+.card:not(.back).ouros{
+  color:#d00000!important;
+}
+
+.card:not(.back).paus,
+.card:not(.back).espadas{
+  color:#111!important;
+}
+
+.card:not(.back) .suit{
+  color:inherit!important;
+  font-size:46px!important;
+  line-height:1!important;
+  text-align:center!important;
+}
+
+.card:not(.back) .rank{
+  color:inherit!important;
+  font-size:27px!important;
+  font-weight:900!important;
+}
+
+.card-top{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  padding:5px 7px 0 7px!important;
+}
+
+.mini-strength{
+  font-size:8px!important;
+  font-weight:900!important;
+  white-space:nowrap!important;
+  opacity:.85!important;
+}
+
+.mini-strength.manilha{
+  font-size:8px!important;
+  font-weight:900!important;
+  background:#111!important;
+  color:#fff!important;
+  padding:2px 4px!important;
+  border-radius:4px!important;
+}
+
+.card .bottom{
+  position:absolute!important;
+  bottom:4px!important;
+  right:7px!important;
+  transform:rotate(180deg)!important;
+}
+
+.card.playable{
+  cursor:pointer!important;
+  transition:transform .15s,box-shadow .15s!important;
+}
+
+.card.playable:hover{
+  transform:translateY(-12px)!important;
+  box-shadow:0 12px 22px rgba(255,255,255,.25)!important;
+}
+
+</style>
+
+
+<style id="human-players-style">
+
+.table-area {
+    position: relative;
+    min-height: 620px;
+    overflow: hidden;
+}
+
+.seat {
+    position: absolute;
+    z-index: 10;
+    width: 170px;
+    min-height: 150px;
+    text-align: center;
+    transition: transform .35s ease, filter .35s ease;
+}
+
+.seat-0 {
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.seat-1 {
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.seat-2 {
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.seat-3 {
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.human-player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.human-avatar {
+    position: relative;
+    width: 82px;
+    height: 92px;
+    margin: auto;
+}
+
+.human-head {
+    position: absolute;
+    width: 48px;
+    height: 54px;
+    left: 17px;
+    top: 2px;
+    border-radius: 48% 48% 45% 45%;
+    background: linear-gradient(145deg, #f2c7a5, #c98762);
+    box-shadow: inset -5px -4px 0 rgba(0,0,0,.08);
+}
+
+.human-hair {
+    position: absolute;
+    width: 52px;
+    height: 30px;
+    left: 15px;
+    top: 0;
+    border-radius: 50% 50% 25% 25%;
+    background: #33251e;
+}
+
+.human-eye {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    top: 27px;
+    border-radius: 50%;
+    background: #222;
+}
+
+.human-eye.left {
+    left: 28px;
+}
+
+.human-eye.right {
+    right: 28px;
+}
+
+.human-body {
+    position: absolute;
+    width: 78px;
+    height: 46px;
+    left: 2px;
+    bottom: 0;
+    border-radius: 42px 42px 12px 12px;
+    background: linear-gradient(145deg, #315b7d, #172d42);
+}
+
+.human-arm {
+    position: absolute;
+    width: 52px;
+    height: 13px;
+    top: 61px;
+    left: 16px;
+    border-radius: 20px;
+    background: #e0aa87;
+    transform-origin: left center;
+    transition: transform .4s ease;
+}
+
+.seat.turn .human-arm {
+    animation: playerMove .8s ease-in-out infinite alternate;
+}
+
+.seat.turn .human-avatar {
+    animation: playerBreathe 1.4s ease-in-out infinite;
+}
+
+@keyframes playerMove {
+    from { transform: rotate(-8deg) translateX(0); }
+    to   { transform: rotate(12deg) translateX(12px); }
+}
+
+@keyframes playerBreathe {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-4px); }
+}
+
+.player-name {
+    font-weight: 800;
+    font-size: 15px;
+}
+
+.player-team {
+    font-size: 12px;
+    opacity: .85;
+}
+
+.hand-count {
+    font-size: 11px;
+    opacity: .8;
+}
+
+.turn .player-name::after {
+    content: "  SUA VEZ";
+    display: inline-block;
+    margin-left: 5px;
+    padding: 3px 6px;
+    border-radius: 8px;
+    background: #ffd54a;
+    color: #222;
+    font-size: 9px;
+    animation: turnPulse 1s infinite;
+}
+
+@keyframes turnPulse {
+    50% { transform: scale(1.08); }
+}
+
+</style>
+
+
+<style id="table-cards-animation">
+
+.table-cards {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px;
+    min-height: 250px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.played {
+    position: relative;
+    width: 92px;
+    min-height: 125px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    animation: cardEnter .45s cubic-bezier(.2,.8,.2,1);
+}
+
+.played > span {
+    order: 2;
+    margin-top: 5px;
+    padding: 3px 8px;
+    border-radius: 8px;
+    background: rgba(0,0,0,.75);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.played .card {
+    order: 1;
+    width: 72px;
+    height: 104px;
+    transform: rotate(var(--card-angle, 0deg));
+    box-shadow:
+        0 8px 16px rgba(0,0,0,.35),
+        0 0 0 2px rgba(255,255,255,.7);
+}
+
+.played:nth-child(1) {
+    --card-angle: -7deg;
+}
+
+.played:nth-child(2) {
+    --card-angle: 5deg;
+}
+
+.played:nth-child(3) {
+    --card-angle: -4deg;
+}
+
+.played:nth-child(4) {
+    --card-angle: 8deg;
+}
+
+.played:nth-child(4) .card {
+    box-shadow:
+        0 10px 22px rgba(0,0,0,.45),
+        0 0 0 3px rgba(255,215,70,.9);
+}
+
+@keyframes cardEnter {
+    0% {
+        opacity: 0;
+        transform: translateY(-45px) scale(.65) rotate(-8deg);
+    }
+
+    70% {
+        opacity: 1;
+        transform: translateY(5px) scale(1.04) rotate(2deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0);
+    }
+}
+
+/* Quando existem 4 cartas, mantÃ©m todas abertas e organizadas */
+.table-cards:has(.played:nth-child(4)) {
+    width: 410px;
+    min-height: 270px;
+}
+
+/* Destaque visual para a mesa */
+.table-area::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 430px;
+    height: 300px;
+    transform: translate(-50%, -50%);
+    border: 2px solid rgba(255,255,255,.14);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+</style>
+
+
+<style id="human-playing-animation">
+
+.seat.playing .human-avatar {
+    animation: humanPlayMove .55s ease-out;
+}
+
+.seat.playing .human-arm {
+    animation: humanArmPlay .55s ease-out;
+}
+
+@keyframes humanPlayMove {
+    0% {
+        transform: translateY(0) scale(1);
+    }
+    35% {
+        transform: translateY(-7px) scale(1.03);
+    }
+    70% {
+        transform: translateY(2px) scale(.99);
+    }
+    100% {
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes humanArmPlay {
+    0% {
+        transform: rotate(0deg) translateX(0);
+    }
+    35% {
+        transform: rotate(18deg) translateX(15px);
+    }
+    70% {
+        transform: rotate(-5deg) translateX(5px);
+    }
+    100% {
+        transform: rotate(0deg) translateX(0);
+    }
+}
+
+.seat.playing .player-name {
+    animation: playerReaction .55s ease-out;
+}
+
+@keyframes playerReaction {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+
+</style>
+
+
+<style id="different-human-players">
+
+/* ================================
+   PERSONAGENS MAIS REALISTAS
+   NÃO ALTERA A POSIÇÃO DOS SEATS
+   ================================ */
+
+.human-player {
+    position: relative;
+    width: 150px;
+    min-height: 145px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.human-avatar {
+    position: relative;
+    width: 86px;
+    height: 112px;
+    margin: 0 auto 4px;
+    filter: drop-shadow(0 7px 5px rgba(0,0,0,.30));
+}
+
+/* cabeça */
+.human-head {
+    position: absolute;
+    width: 48px;
+    height: 55px;
+    left: 19px;
+    top: 20px;
+    border-radius: 46% 46% 43% 43%;
+    z-index: 3;
+    box-shadow:
+        inset -5px -7px 9px rgba(0,0,0,.18),
+        inset 4px 3px 7px rgba(255,255,255,.18);
+}
+
+/* pescoço */
+.human-head::after {
+    content: "";
+    position: absolute;
+    width: 19px;
+    height: 18px;
+    left: 15px;
+    bottom: -13px;
+    border-radius: 5px;
+    background: inherit;
+    z-index: -1;
+}
+
+/* olhos */
+.human-eye {
+    position: absolute;
+    width: 6px;
+    height: 7px;
+    top: 25px;
+    background: #17120f;
+    border-radius: 50%;
+    box-shadow: 0 0 1px #000;
+    z-index: 8;
+}
+
+.human-eye.left {
+    left: 12px;
+}
+
+.human-eye.right {
+    right: 12px;
+}
+
+/* sobrancelhas */
+.human-head::before {
+    content: "";
+    position: absolute;
+    width: 31px;
+    height: 8px;
+    left: 8px;
+    top: 18px;
+    border-top: 3px solid rgba(45,25,18,.75);
+    border-radius: 50%;
+}
+
+/* cabelo */
+.human-hair {
+    position: absolute;
+    width: 52px;
+    height: 31px;
+    left: 17px;
+    top: 15px;
+    border-radius: 55% 55% 35% 30%;
+    z-index: 6;
+    box-shadow: inset -5px -4px 7px rgba(0,0,0,.25);
+}
+
+/* nariz */
+.human-head .human-eye.right::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 8px;
+    left: -3px;
+    top: 8px;
+    border-right: 2px solid rgba(90,45,30,.45);
+    border-radius: 50%;
+}
+
+/* corpo / camisa */
+.human-body {
+    position: absolute;
+    width: 70px;
+    height: 54px;
+    left: 8px;
+    top: 72px;
+    border-radius: 32px 32px 12px 12px;
+    z-index: 2;
+    box-shadow:
+        inset -8px -7px 10px rgba(0,0,0,.24),
+        inset 6px 4px 8px rgba(255,255,255,.12);
+}
+
+/* braço */
+.human-arm {
+    position: absolute;
+    width: 18px;
+    height: 47px;
+    left: 2px;
+    top: 73px;
+    border-radius: 14px;
+    background: #c98965;
+    transform: rotate(14deg);
+    transform-origin: top center;
+    z-index: 1;
+    box-shadow: inset -3px -4px 5px rgba(0,0,0,.18);
+}
+
+/* ================================
+   JOGADOR — VOCÊ
+   ================================ */
+
+.avatar-seat-0 .human-hair {
+    background: linear-gradient(145deg,#201612,#090807);
+    height: 28px;
+    border-radius: 55% 55% 30% 25%;
+}
+
+.avatar-seat-0 .human-head {
+    background: linear-gradient(145deg,#efbd96,#bd7655);
+}
+
+.avatar-seat-0 .human-body {
+    background: linear-gradient(145deg,#315f7d,#142b40);
+}
+
+.avatar-seat-0 .human-arm {
+    background: #d09670;
+}
+
+/* ================================
+   IA 2 — BARBUDO
+   ================================ */
+
+.avatar-seat-1 .human-hair {
+    background: linear-gradient(145deg,#4b2b17,#1d1009);
+    height: 25px;
+    border-radius: 48% 52% 35% 30%;
+}
+
+.avatar-seat-1 .human-head {
+    background: linear-gradient(145deg,#d99b72,#96583d);
+}
+
+/* barba */
+.avatar-seat-1 .human-head {
+    box-shadow:
+        inset 0 -14px 0 rgba(55,30,20,.55),
+        inset -5px -7px 9px rgba(0,0,0,.18);
+}
+
+.avatar-seat-1 .human-body {
+    background: linear-gradient(145deg,#704034,#2d1712);
+}
+
+.avatar-seat-1 .human-arm {
+    background: #b97655;
+}
+
+/* ================================
+   IA 3 — MULHER
+   ================================ */
+
+.avatar-seat-2 .human-hair {
+    background: linear-gradient(145deg,#171717,#050505);
+    width: 59px;
+    height: 43px;
+    left: 14px;
+    top: 12px;
+    border-radius: 50% 50% 38% 38%;
+}
+
+.avatar-seat-2 .human-head {
+    background: linear-gradient(145deg,#c9855f,#78452f);
+}
+
+.avatar-seat-2 .human-body {
+    width: 66px;
+    background: linear-gradient(145deg,#315c35,#172d1a);
+    border-radius: 30px 30px 15px 15px;
+}
+
+.avatar-seat-2 .human-arm {
+    background: #b97052;
+}
+
+/* detalhe feminino */
+.avatar-seat-2 .human-head::after {
+    box-shadow: 0 0 0 2px rgba(0,0,0,.08);
+}
+
+/* ================================
+   IA 4 — MAIS VELHO
+   ================================ */
+
+.avatar-seat-3 .human-hair {
+    background: linear-gradient(145deg,#b89a78,#6e563d);
+    height: 27px;
+    border-radius: 50% 50% 35% 35%;
+}
+
+.avatar-seat-3 .human-head {
+    background: linear-gradient(145deg,#f1c7a4,#bd8262);
+}
+
+.avatar-seat-3 .human-body {
+    background: linear-gradient(145deg,#783737,#3c1818);
+}
+
+.avatar-seat-3 .human-arm {
+    background: #d49a77;
+}
+
+/* ================================
+   DIFERENÇAS DE ROSTO
+   ================================ */
+
+.avatar-seat-0 .human-eye {
+    width: 6px;
+    height: 7px;
+}
+
+.avatar-seat-1 .human-eye {
+    width: 5px;
+    height: 6px;
+}
+
+.avatar-seat-2 .human-eye {
+    width: 5px;
+    height: 6px;
+}
+
+.avatar-seat-3 .human-eye {
+    width: 5px;
+    height: 5px;
+}
+
+/* ================================
+   MOVIMENTO NATURAL
+   ================================ */
+
+.human-avatar {
+    animation: humanIdle 3.5s ease-in-out infinite;
+}
+
+@keyframes humanIdle {
+    0%,100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-2px);
+    }
+}
+
+.seat.playing .human-avatar {
+    animation: humanPlayCharacter .55s ease-out;
+}
+
+@keyframes humanPlayCharacter {
+
+    0% {
+        transform: translateY(0) scale(1);
+    }
+
+    35% {
+        transform: translateY(-9px) scale(1.06);
+    }
+
+    65% {
+        transform: translateY(2px) scale(1.02);
+    }
+
+    100% {
+        transform: translateY(0) scale(1);
+    }
+}
+
+</style>
+
+</head>
+
+<body class="game-body">
+
+<header class="game-header">
+  <div class="brand">Truco Mineiro</div>
+
+  <div class="room-info">
+    Sala:
+    <strong id="roomCode">----</strong>
+  </div>
+</header>
+
+<main class="game-area">
+
+  <section class="scoreboard">
+    <div class="score-box">
+      Dupla 1
+      <span id="score0" class="score">0</span>
+    </div>
+
+    <div class="score-box">
+      Dupla 2
+      <span id="score1" class="score">0</span>
+    </div>
+
+    <div class="score-box">
+      PONTOS
+      <span id="value" class="score">1</span>
+    </div>
+  </section>
+
+  <div id="message" class="message">
+    Conectando...
+  </div>
+
+  <div id="mao11Panel" class="mao11-panel hidden"></div>
+
+  <div id="signalPanel" class="signal-panel">
+    <div class="signal-title">🤝 SINAIS PARA O PARCEIRO</div>
+
+    <div class="signal-buttons">
+      <button onclick="enviarSinal('manilha')" title="Avisar que tem manilha">
+        👁️ MANILHA
+      </button>
+
+      <button onclick="enviarSinal('boa')" title="Avisar que está com carta boa">
+        👍 BOA
+      </button>
+
+      <button onclick="enviarSinal('ruim')" title="Avisar que está com carta ruim">
+        👎 RUIM
+      </button>
+
+      <button onclick="enviarSinal('carta_alta')" title="Carta alta">
+        🃏 ALTA
+      </button>
+
+      <button onclick="enviarSinal('carta_media')" title="Carta média">
+        🃏 MÉDIA
+      </button>
+
+      <button onclick="enviarSinal('carta_baixa')" title="Carta baixa">
+        🃏 BAIXA
+      </button>
+
+      <button onclick="enviarSinal('truco')" title="Sinal para trucar">
+        🔥 TRUCA
+      </button>
+
+      <button onclick="enviarSinal('segura')" title="Sinal para segurar">
+        ✋ SEGURA
+      </button>
+    </div>
+
+    <div id="signalStatus" class="signal-status">
+      Seus sinais aparecem somente para seu parceiro.
+    </div>
+  </div>
+
+  
+<style>
+.truco-announcement {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.truco-announcement.show {
+  display: flex;
+  animation: trucoOverlayIn .15s ease-out;
+}
+
+.truco-announcement-text {
+  font-family: Arial Black, Impact, sans-serif;
+  font-size: clamp(70px, 15vw, 190px);
+  font-weight: 1000;
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  text-align: center;
+  color: #fff;
+  text-shadow:
+    0 5px 0 #000,
+    0 8px 20px rgba(0,0,0,.9);
+  animation: trucoTextPop .65s cubic-bezier(.17,.67,.35,1.4);
+}
+
+@keyframes trucoOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes trucoTextPop {
+  0% {
+    transform: scale(.25) rotate(-8deg);
+    opacity: 0;
+  }
+  55% {
+    transform: scale(1.15) rotate(2deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+</style>
+
+
+<div id="trucoAnnouncement" class="truco-announcement">
+  <div id="trucoAnnouncementText" class="truco-announcement-text">
+    TRUCO!
+  </div>
+</div>
+
+<section class="table-area">
+
+    <div id="seat0" class="seat seat-0"></div>
+    <div id="seat1" class="seat seat-1"></div>
+    <div id="seat2" class="seat seat-2"></div>
+    <div id="seat3" class="seat seat-3"></div>
+
+    <div id="tableCards" class="table-cards"></div>
+
+  </section>
+
+  <div id="tricks" class="tricks">
+    Vazas: 0 x 0
+  </div>
+
+  <div id="myHand" class="my-hand"></div>
+
+  <div class="actions"></div>
+
+</main>
+
+<!-- ANIMAÃ‡ÃƒO DE EMBARALHAMENTO -->
+<div id="dealOverlay" class="deal-overlay">
+  <div class="deal-box">
+
+    <div class="deal-title" id="dealTitle">
+      Embaralhando...
+    </div>
+
+    <div class="deck-animation">
+      <div class="deck-card"></div>
+      <div class="deck-card"></div>
+      <div class="deck-card"></div>
+    </div>
+
+    <div class="deal-subtitle" id="dealSubtitle">
+      Preparando novas cartas
+    </div>
+
+  </div>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const code = location.pathname.split("/").filter(Boolean).pop() || "";
+
+const name =
+  params.get("name") ||
+  localStorage.getItem("truco_name") ||
+  ("Jogador " + Math.floor(Math.random() * 999));
+
+localStorage.setItem("truco_name", name);
+
+let mySeat = null;
+let ws = null;
+let state = null;
+let previousState = null;
+let firstState = true;
+let animationTimer = null;
+
+document.getElementById("roomCode").textContent = code.toUpperCase();
+
+/* ==============================
+   CONEXÃƒO
+   ============================== */
+
+function connect(){
+
+  const protocol =
+    location.protocol === "https:" ? "wss" : "ws";
+
+  ws = new WebSocket(
+    `${protocol}://${location.host}/ws/${code}`
+  );
+
+  ws.onopen = () => {
+
+    ws.send(JSON.stringify({
+      name: name
+    }));
+
+  };
+
+  ws.onmessage = e => {
+
+    const data = JSON.parse(e.data);
+
+    if(data.type === "joined"){
+
+      mySeat = data.seat;
+
+      if(params.get("create") === "1"){
+
+        setTimeout(() => {
+          sendAction("start");
+        }, 500);
+
+      }
+
+    }
+
+    if(data.type === "state"){
+
+      previousState = state;
+
+      const novoEstado = data.state;
+
+      // Detecta pedido de Truco ou aumento confirmado.
+      if(novoEstado){
+
+        const novoValor =
+          Number(
+            novoEstado.pending_raise ||
+            novoEstado.hand_value ||
+            1
+          );
+
+        const valorAnterior =
+          Number(
+            previousState?.pending_raise ||
+            previousState?.hand_value ||
+            1
+          );
+
+        // Novo pedido de Truco.
+        if(
+          novoEstado.stage === "raise" &&
+          previousState?.stage !== "raise"
+        ){
+          mostrarTrucoGrande(novoValor);
+        }
+
+        // Aumento confirmado: 3 -> 6 -> 9 -> 12.
+        else if(
+          novoValor > valorAnterior &&
+          [3, 6, 9, 12].includes(novoValor)
+        ){
+          mostrarTrucoGrande(novoValor);
+        }
+
+      }
+
+      state = novoEstado;
+
+      verificarNovaMao();
+
+      render();
+
+    }
+
+    if(data.type === "partner_signal"){
+      mostrarSinalParceiro(data);
+    }
+
+    if(data.type === "signal_sent"){
+
+      const dados = signalLabels[data.signal];
+
+      if(dados){
+
+        const status =
+          document.getElementById("signalStatus");
+
+        if(status){
+          status.textContent =
+            dados.icon + " Sinal enviado ao parceiro.";
+        }
+
+      }
+
+    }
+
+    if(data.type === "error"){
+
+      mostrarMensagem(data.message);
+
+    }
+
+  };
+
+  ws.onclose = () => {
+
+    document.getElementById("message").textContent =
+      "ConexÃ£o encerrada.";
+
+  };
+
+  ws.onerror = () => {
+
+    document.getElementById("message").textContent =
+      "Erro na conexÃ£o com o servidor.";
+
+  };
+
+}
+
+/* ==============================
+   ENVIO DE AÃ‡Ã•ES
+   ============================== */
+
+
+function mostrarTrucoGrande(valor){
+  const box = document.getElementById("trucoAnnouncement");
+  const texto = document.getElementById("trucoAnnouncementText");
+
+  if(!box || !texto){
+    return;
+  }
+
+  const nomes = {
+    3: "TRUCO!",
+    6: "SEIS!",
+    9: "NOVE!",
+    12: "DOZE!"
+  };
+
+  texto.textContent = nomes[Number(valor)] || ("TRUCO " + valor + "!");
+
+  box.classList.remove("show");
+
+  // Reinicia a animação.
+  void box.offsetWidth;
+
+  box.classList.add("show");
+
+  clearTimeout(window._trucoAnnouncementTimer);
+
+  window._trucoAnnouncementTimer = setTimeout(() => {
+    box.classList.remove("show");
+  }, 1800);
+}
+
+function sendAction(action, extra = {}){
+
+  if(ws && ws.readyState === WebSocket.OPEN){
+
+    ws.send(JSON.stringify({
+      action,
+      ...extra
+    }));
+
+  }
+
+}
+
+/* ==============================
+   SINAIS SECRETOS DO PARCEIRO
+   ============================== */
+
+const signalLabels = {
+  manilha: {
+    icon: "👁️",
+    text: "MANILHA"
+  },
+  boa: {
+    icon: "👍",
+    text: "BOA"
+  },
+  ruim: {
+    icon: "👎",
+    text: "RUIM"
+  },
+  carta_alta: {
+    icon: "🃏",
+    text: "CARTA ALTA"
+  },
+  carta_media: {
+    icon: "🃏",
+    text: "CARTA MÉDIA"
+  },
+  carta_baixa: {
+    icon: "🃏",
+    text: "CARTA BAIXA"
+  },
+  truco: {
+    icon: "🔥",
+    text: "TRUCA!"
+  },
+  segura: {
+    icon: "✋",
+    text: "SEGURA"
+  }
+};
+
+function enviarSinal(signal){
+
+  if(!ws || ws.readyState !== WebSocket.OPEN){
+    return;
+  }
+
+  ws.send(JSON.stringify({
+    action: "signal",
+    signal: signal
+  }));
+
+  const dados = signalLabels[signal];
+
+  if(dados){
+    const status =
+      document.getElementById("signalStatus");
+
+    if(status){
+      status.textContent =
+        dados.icon + " Sinal enviado ao seu parceiro.";
+    }
+  }
+}
+
+function mostrarSinalParceiro(data){
+
+  const dados = signalLabels[data.signal];
+
+  if(!dados){
+    return;
+  }
+
+  const antigo =
+    document.querySelector(".partner-signal");
+
+  if(antigo){
+    antigo.remove();
+  }
+
+  const aviso =
+    document.createElement("div");
+
+  aviso.className = "partner-signal";
+
+  const nome =
+    document.createElement("div");
+
+  nome.className = "partner-signal-name";
+  nome.textContent =
+    (data.from_name || "Seu parceiro") +
+    " enviou um sinal";
+
+  const icone =
+    document.createElement("div");
+
+  icone.className = "partner-signal-icon";
+  icone.textContent = dados.icon;
+
+  const texto =
+    document.createElement("div");
+
+  texto.className = "partner-signal-text";
+  texto.textContent = dados.text;
+
+  aviso.appendChild(nome);
+  aviso.appendChild(icone);
+  aviso.appendChild(texto);
+
+  document.body.appendChild(aviso);
+
+  setTimeout(() => {
+    aviso.remove();
+  }, 3000);
+}
+
+/* ==============================
+   JOGAR CARTA
+   ============================== */
+
+function jogarCarta(index){
+
+  if(!state) return;
+
+  if(state.stage !== "playing") return;
+
+  if(state.current_player !== mySeat) return;
+
+  sendAction("play", {
+    index: index
+  });
+
+}
+
+/* ==============================
+   TRUCO
+   ============================== */
+
+function pedirTruco(){
+
+  if(!state) return;
+
+  if(state.stage !== "playing") return;
+
+  if(state.current_player !== mySeat){
+
+    mostrarMensagem("Ainda nÃ£o Ã© sua vez.");
+
+    return;
+  }
+
+  const atual = Number(state.hand_value || 1);
+
+  const proximos = {
+    1: 3,
+    3: 6,
+    6: 9,
+    9: 12
+  };
+
+  const proximo = proximos[atual];
+
+  if(!proximo){
+
+    mostrarMensagem(
+      "O valor mÃ¡ximo da mÃ£o jÃ¡ Ã© 12."
+    );
+
+    return;
+  }
+
+  sendAction("raise", {
+    value: proximo
+  });
+
+}
+
+/* ==============================
+   RESPONDER TRUCO
+   ============================== */
+
+
+function aumentarTruco(valor){
+
+  if(!state){
+    return;
+  }
+
+  if(state.stage !== "raise"){
+    return;
+  }
+
+  sendAction("raise", {
+    value: Number(valor)
+  });
+
+}
+
+function answer(accept){
+
+  sendAction("answer", {
+    accept: accept
+  });
+
+}
+
+/* ==============================
+   MÃƒO DE 11
+   ============================== */
+
+function responderMao11(jogar){
+
+  sendAction("mao11", {
+    jogar: jogar
+  });
+
+}
+
+/* ==============================
+   CARTA
+   ============================== */
+
+function suitSymbol(s){
+
+  const symbols = {
+    paus: "&clubs;",
+    copas: "&hearts;",
+    espadas: "&spades;",
+    ouros: "&diams;"
+  };
+
+  return symbols[s] || s;
+
+}
+
+function cardHTML(card, index, playable = false){
+
+  if(!card){
+    return "";
+  }
+
+  if(card.hidden){
+    return `
+      <div class="card back"></div>
+    `;
+  }
+
+  const suit = suitSymbol(card.suit);
+  const suitClass = card.suit || "";
+
+  let destaque = "";
+
+  if(card.rank === "4" && card.suit === "paus"){
+    destaque = "ZAP";
+  }
+  else if(card.rank === "7" && card.suit === "copas"){
+    destaque = "MANILHA";
+  }
+  else if(card.rank === "A" && card.suit === "espadas"){
+    destaque = "ESPADILHA";
+  }
+  else if(card.rank === "7" && card.suit === "ouros"){
+    destaque = "MANILHA";
+  }
+
+  const etiqueta = destaque
+    ? `<span class="mini-strength manilha">${destaque}</span>`
+    : `<span class="mini-strength">For?a ${card.strength}</span>`;
+
+  return `
+    <div
+      class="card ${suitClass} ${playable ? "playable" : ""}"
+      ${playable ? `onclick="jogarCarta(${index})"` : ""}
+    >
+      <div class="card-top">
+        <span class="rank">${card.rank}</span>
+        ${etiqueta}
+      </div>
+
+      <div class="suit">${suit}</div>
+
+      <div class="rank bottom">${card.rank}</div>
+    </div>
+  `;
+}
+
+function playerHTML(player){
+
+  if(!player){
+
+    return `
+      <div class="human-player">
+        <div class="human-avatar">
+          <div class="human-head"></div>
+          <div class="human-body"></div>
+        </div>
+
+        <div class="player-name">
+          Aguardando jogador...
+        </div>
+      </div>
+    `;
+
+  }
+
+  const bot = player.bot ? " ðŸ¤–" : "";
+  const avatarClass = "avatar-seat-" + Number(player.seat);
+
+  return `
+    <div class="human-player ${avatarClass}">
+
+      <div class="human-avatar">
+
+        <div class="human-hair"></div>
+
+        <div class="human-head">
+          <div class="human-eye left"></div>
+          <div class="human-eye right"></div>
+        </div>
+
+        <div class="human-body"></div>
+
+        <div class="human-arm"></div>
+
+      </div>
+
+      <div class="player-name">
+        ${player.name || "Jogador"}${bot}
+      </div>
+
+      <div class="player-team">
+        Dupla ${Number(player.team) + 1}
+      </div>
+
+      <div class="hand-count">
+        Cartas: ${(player.hand || []).length}
+      </div>
+
+    </div>
+  `;
+
+}
+
+/* ==============================
+   MENSAGEM
+   ============================== */
+
+function mostrarMensagem(texto){
+
+  const el = document.getElementById("message");
+
+  if(el){
+    el.textContent = texto;
+  }
+
+}
+
+/* ==============================
+   MÃƒO NOVA
+   ============================== */
+
+function verificarNovaMao(){
+
+  if(!state) return;
+
+  let nova = false;
+
+  if(firstState){
+
+    nova =
+      state.stage === "playing" &&
+      state.table &&
+      state.table.length === 0;
+
+  }
+  else if(previousState){
+
+    nova =
+      state.stage === "playing" &&
+      previousState.stage !== "playing" &&
+      state.table &&
+      state.table.length === 0;
+
+  }
+
+  if(nova){
+
+    mostrarAnimacaoNovaMao(
+      Number(state.hand_value) === 3
+    );
+
+  }
+
+  firstState = false;
+
+}
+
+/* ==============================
+   ANIMAÃ‡ÃƒO
+   ============================== */
+
+function mostrarAnimacaoNovaMao(mao11){
+
+  const overlay =
+    document.getElementById("dealOverlay");
+
+  const title =
+    document.getElementById("dealTitle");
+
+  const subtitle =
+    document.getElementById("dealSubtitle");
+
+  if(!overlay) return;
+
+  if(mao11){
+
+    title.textContent =
+      "MÃ£o de 11 â€” embaralhando...";
+
+    subtitle.textContent =
+      "Distribuindo 3 cartas para cada jogador";
+
+  }
+  else{
+
+    title.textContent =
+      "Embaralhando...";
+
+    subtitle.textContent =
+      "Distribuindo novas cartas";
+
+  }
+
+  overlay.classList.add("show");
+
+  clearTimeout(animationTimer);
+
+  animationTimer = setTimeout(() => {
+
+    title.textContent =
+      "Cartas distribuÃ­das!";
+
+    subtitle.textContent =
+      "Boa sorte!";
+
+  }, 1100);
+
+  animationTimer = setTimeout(() => {
+
+    overlay.classList.remove("show");
+
+  }, 1800);
+
+}
+
+/* ==============================
+   RENDER
+   ============================== */
+
+function render(){
+
+  if(!state) return;
+
+  document.getElementById("score0").textContent =
+    state.scores[0];
+
+  document.getElementById("score1").textContent =
+    state.scores[1];
+
+  document.getElementById("value").textContent =
+    state.hand_value;
+
+  /* ---------- JOGADORES ---------- */
+
+  for(let i = 0; i < 4; i++){
+
+    const seat =
+      document.getElementById("seat" + i);
+
+    if(!seat) continue;
+
+    seat.innerHTML =
+        playerHTML(state.players[i]);
+
+      seat.classList.toggle(
+        "turn",
+        state.current_player === i &&
+        state.stage === "playing"
+      );
+
+      const jogadorJogou =
+        (state.table || []).some(
+          carta => Number(carta.seat) === i
+        );
+
+      seat.classList.toggle(
+        "playing",
+        jogadorJogou
+      );
+
+    }
+  
+    /* ---------- MINHA MÃƒO ---------- */
+
+  const me =
+    state.players[mySeat];
+
+  const hand =
+    document.getElementById("myHand");
+
+  hand.innerHTML =
+    me
+      ? (me.hand || []).map((c, i) =>
+          cardHTML(
+            c,
+            i,
+            state.current_player === mySeat &&
+            state.stage === "playing"
+          )
+        ).join("")
+      : "";
+
+  /* ---------- MESA ---------- */
+
+  const cartasMesa =
+    (state.table && state.table.length)
+      ? state.table
+      : (state.last_trick || []);
+
+  document.getElementById("tableCards").innerHTML =
+    cartasMesa.map(x => `
+      <div class="played">
+        <span>
+          ${state.players[x.seat]?.name || "?"}
+        </span>
+
+        ${cardHTML(x.card, -1, false)}
+      </div>
+    `).join("");
+
+  /* ---------- VAZAS ---------- */
+
+  const tricks =
+    state.tricks || [0, 0];
+
+  document.getElementById("tricks").textContent =
+    `Vazas: ${tricks[0]} x ${tricks[1]}`;
+
+  /* ==============================
+     MENSAGEM
+     ============================== */
+
+  let msg =
+    state.winner_message || "";
+
+  if(!msg){
+
+    if(state.stage === "mao11"){
+
+      msg =
+        "ðŸ”¥ MÃƒO DE 11! Os dois parceiros precisam decidir.";
+
+    }
+    else if(state.stage === "raise"){
+
+      msg =
+        `ðŸ”¥ TRUCO ${state.pending_raise}! ` +
+        `A dupla adversÃ¡ria deve responder.`;
+
+    }
+    else if(state.stage === "playing"){
+
+      msg =
+        `Vez de ${
+          state.players[state.current_player]?.name ||
+          "jogador"
+        }`;
+
+    }
+    else{
+
+      msg =
+        "Aguardando partida...";
+
+    }
+
+  }
+
+  document.getElementById("message").textContent =
+    msg;
+
+  /* ==============================
+     PAINEL MÃƒO DE 11
+     ============================== */
+
+  const mao11Panel =
+    document.getElementById("mao11Panel");
+
+  const botoes =
+    document.querySelector(".actions");
+
+  if(!mao11Panel || !botoes) return;
+
+  const minhaEquipe =
+    me ? Number(me.team) : null;
+
+  const equipe11 =
+    state.mao11_team === null ||
+    state.mao11_team === undefined
+      ? null
+      : Number(state.mao11_team);
+
+  const souDaMao11 =
+    state.stage === "mao11" &&
+    state.mao11_ativa === true &&
+    minhaEquipe === equipe11;
+
+  const decisoes =
+    state.mao11_decisoes || {};
+
+  const minhaDecisao =
+    decisoes[String(mySeat)];
+
+  if(souDaMao11){
+
+    mao11Panel.classList.remove("hidden");
+
+    if(minhaDecisao === null ||
+       minhaDecisao === undefined){
+
+      mao11Panel.innerHTML = `
+        <div class="mao11-title">
+          ðŸ”¥ MÃƒO DE 11
+        </div>
+
+        <div class="mao11-text">
+          Sua dupla chegou a 11 pontos.
+          <br>
+          VocÃª precisa decidir.
+        </div>
+
+        <div class="actions">
+          <button
+            class="success"
+            onclick="responderMao11(true)"
+          >
+            ðŸŸ¢ JOGAR
+          </button>
+
+          <button
+            class="danger"
+            onclick="responderMao11(false)"
+          >
+            ðŸ”´ CORRER
+          </button>
+        </div>
+
+        <div class="mao11-waiting">
+          Os dois parceiros precisam decidir JOGAR.
+        </div>
+      `;
+
+      botoes.innerHTML = "";
+
+    }
+    else if(minhaDecisao === true){
+
+      mao11Panel.innerHTML = `
+        <div class="mao11-title">
+          ðŸ”¥ MÃƒO DE 11
+        </div>
+
+        <div class="mao11-text">
+          VocÃª escolheu <strong>JOGAR</strong>.
+        </div>
+
+        <div class="mao11-waiting">
+          Aguardando seu parceiro...
+        </div>
+      `;
+
+      botoes.innerHTML = "";
+
+    }
+    else{
+
+      mao11Panel.innerHTML = `
+        <div class="mao11-title">
+          MÃƒO DE 11
+        </div>
+
+        <div class="mao11-text">
+          VocÃª escolheu <strong>CORRER</strong>.
+        </div>
+      `;
+
+      botoes.innerHTML = "";
+
+    }
+
+    return;
+
+  }
+
+  mao11Panel.classList.add("hidden");
+  mao11Panel.innerHTML = "";
+
+  /* ==============================
+     BOTÃ•ES NORMAIS
+     ============================== */
+
+  const minhaVez =
+    state.current_player === mySeat &&
+    state.stage === "playing";
+
+  const recebendoTruco =
+    state.stage === "raise" &&
+    state.pending_team !== me?.team;
+
+  const proximos = {
+    1: 3,
+    3: 6,
+    6: 9,
+    9: 12
+  };
+
+  const proximo =
+    proximos[Number(state.hand_value)];
+
+  /* ---------- RESPONDER TRUCO ---------- */
+
+  if(recebendoTruco){
+
+    const pedido = Number(state.pending_raise || 3);
+
+    const aumentos = {
+      3: 6,
+      6: 9,
+      9: 12
+    };
+
+    const proximoAumento = aumentos[pedido];
+
+    let html = `
+      <div class="truco-response">
+
+        <div class="truco-title">
+          ?? TRUCO!
+        </div>
+
+        <div class="truco-value">
+          A dupla advers?ria pediu
+          <strong>${pedido} PONTOS</strong>
+        </div>
+
+        <div class="truco-buttons">
+
+          <button onclick="answer(true)">
+            ?? ACEITAR ${pedido}
+          </button>
+
+          <button
+            onclick="answer(false)"
+            class="danger"
+          >
+            ?? CORRER
+          </button>
+    `;
+
+    if(proximoAumento){
+
+      html += `
+          <button
+            onclick="aumentarTruco(${proximoAumento})"
+            class="warning"
+          >
+            ?? AUMENTAR PARA ${proximoAumento}
+          </button>
+      `;
+
+    }
+
+    html += `
+        </div>
+
+      </div>
+    `;
+
+    botoes.innerHTML = html;
+
+    return;
+
+  }
+
+  /* ---------- MINHA VEZ ---------- */
+
+  if(minhaVez){
+
+    let html = "";
+
+    if(proximo){
+
+      html += `
+        <button onclick="pedirTruco()">
+          TRUCO ${proximo}
+        </button>
+      `;
+
+    }
+
+    botoes.innerHTML = html;
+
+    return;
+
+  }
+
+  /* ---------- AGUARDANDO ---------- */
+
+  botoes.innerHTML = "";
+
+}
+
+/* ==============================
+   INICIAR
+   ============================== */
+
+connect();
+
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,64 @@
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#111;color:#fff}
+.home{min-height:100vh;display:flex;align-items:center;justify-content:center;
+background:radial-gradient(circle at center,#174b2c,#07170d 65%)}
+.hero{text-align:center;width:min(500px,92vw)}
+.logo{font-size:72px}
+h1{font-size:42px;margin:8px 0}
+.hero p{opacity:.8}
+.panel{background:rgba(0,0,0,.45);padding:25px;border-radius:20px;margin-top:25px}
+input{width:100%;padding:15px;border-radius:10px;border:0;margin:7px 0;
+font-size:16px}
+button{border:0;border-radius:10px;padding:13px 18px;font-weight:bold;
+cursor:pointer;background:#e8b949;color:#111;margin:5px}
+button.secondary{background:#fff}
+button.danger{background:#d9534f;color:#fff}
+.separator{opacity:.5;margin:12px}
+header{height:60px;display:flex;align-items:center;gap:20px;padding:0 18px;
+background:#080808;border-bottom:1px solid #333}
+.brand{font-weight:bold;margin-right:auto}
+.small{padding:8px 12px;margin:0}
+.table{position:relative;min-height:calc(100vh - 60px);overflow:hidden;
+background:radial-gradient(circle,#236b3c,#0c2d18 70%)}
+.scoreboard{position:absolute;top:15px;left:50%;transform:translateX(-50%);
+display:flex;gap:25px;background:rgba(0,0,0,.5);padding:10px 18px;border-radius:15px;z-index:3}
+.seat{position:absolute;text-align:center;background:rgba(0,0,0,.38);
+padding:10px 15px;border-radius:14px;min-width:110px}
+.seat.top{top:80px;left:50%;transform:translateX(-50%)}
+.seat.left{left:15px;top:45%;transform:translateY(-50%)}
+.seat.right{right:15px;top:45%;transform:translateY(-50%)}
+.seat.bottom{bottom:155px;left:50%;transform:translateX(-50%)}
+.seat.turn{box-shadow:0 0 0 3px #e8b949}
+.center{position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);
+text-align:center;width:65%}
+.scenario{opacity:.75;font-size:14px}
+.message{font-size:18px;font-weight:bold;margin:15px}
+.table-cards{display:flex;justify-content:center;gap:10px;min-height:155px}
+.played{font-size:11px}
+.card{width:82px;height:120px;background:#fff;color:#111;border-radius:10px;
+box-shadow:0 5px 15px #0008;display:flex;flex-direction:column;
+align-items:center;justify-content:center;font-weight:bold;position:relative;
+cursor:pointer}
+.card:hover{transform:translateY(-10px)}
+.card .rank{font-size:28px}
+.card .suit{font-size:42px}
+.card.copas,.card.ouros{color:#c22}
+.card small{font-size:9px;position:absolute;bottom:5px}
+.card.back{background:repeating-linear-gradient(45deg,#333,#333 7px,#555 7px,#555 14px);
+color:#fff}
+.hand{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+display:flex;justify-content:center;gap:8px;min-height:125px}
+.actions{position:absolute;bottom:145px;left:50%;transform:translateX(-50%);
+display:flex;gap:3px;z-index:4}
+.player-name{font-weight:bold}
+.team{font-size:11px;opacity:.65}
+@media(max-width:700px){
+ h1{font-size:30px}
+ .scoreboard{font-size:12px;gap:8px}
+ .seat{min-width:80px;padding:7px;font-size:12px}
+ .center{width:75%}
+ .card{width:65px;height:100px}
+ .card .rank{font-size:22px}.card .suit{font-size:30px}
+ .actions{bottom:135px;flex-wrap:wrap;justify-content:center;width:95%}
+ .hand{bottom:5px}
+}
