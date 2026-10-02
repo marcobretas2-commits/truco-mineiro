@@ -1410,14 +1410,38 @@ async def websocket_endpoint(websocket: WebSocket, code: str):
         await websocket.close()
         return
 
-    free_seat = next((s for s in range(4) if s not in room.players), None)
-    if free_seat is None:
-        await websocket.send_json({"type": "error", "message": "Sala cheia."})
-        await websocket.close()
-        return
+    # Se o jogador voltou com o mesmo nome, reutiliza a cadeira anterior.
+    existing_seat = next(
+        (seat for seat, jogador in room.players.items() if jogador.name == name),
+        None
+    )
 
-    p = Player(sid=sid, name=name, seat=free_seat, ws=websocket)
-    room.players[free_seat] = p
+    if existing_seat is not None:
+        free_seat = existing_seat
+        jogador_existente = room.players[free_seat]
+        jogador_existente.sid = sid
+        jogador_existente.ws = websocket
+        jogador_existente.name = name
+        p = jogador_existente
+    else:
+        free_seat = next((s for s in range(4) if s not in room.players), None)
+
+        if free_seat is None:
+            await websocket.send_json({
+                "type": "error",
+                "message": "Sala cheia."
+            })
+            await websocket.close()
+            return
+
+        p = Player(
+            sid=sid,
+            name=name,
+            seat=free_seat,
+            ws=websocket
+        )
+        room.players[free_seat] = p
+
     room.sockets[sid] = websocket
 
     await websocket.send_json({
@@ -1553,6 +1577,7 @@ async def websocket_endpoint(websocket: WebSocket, code: str):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+
 
 
 

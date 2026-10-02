@@ -955,32 +955,32 @@
 .seat {
     position: absolute;
     z-index: 10;
-    width: 170px;
-    min-height: 150px;
+    width: 135px;
+    min-height: 105px;
     text-align: center;
     transition: transform .35s ease, filter .35s ease;
 }
 
 .seat-0 {
-    bottom: 15px;
+    bottom: 8px;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .seat-1 {
-    left: 20px;
+    left: 8px;
     top: 50%;
     transform: translateY(-50%);
 }
 
 .seat-2 {
-    top: 15px;
+    top: 8px;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .seat-3 {
-    right: 20px;
+    right: 8px;
     top: 50%;
     transform: translateY(-50%);
 }
@@ -1297,10 +1297,11 @@
 
 .human-avatar {
     position: relative;
-    width: 86px;
-    height: 112px;
-    margin: 0 auto 4px;
-    filter: drop-shadow(0 7px 5px rgba(0,0,0,.30));
+    width: 68px;
+    height: 88px;
+    margin: 0 auto 2px;
+    filter: drop-shadow(0 5px 4px rgba(0,0,0,.30));
+    transform-origin: center bottom;
 }
 
 /* cabeça */
@@ -1587,6 +1588,50 @@
 
 </style>
 
+<style id="truco-actions-table-position">
+.table-area > .actions {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 150px;
+    max-width: 150px;
+    margin: 0;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 7px;
+    z-index: 50;
+    background: rgba(0,0,0,.18);
+    border-radius: 14px;
+}
+
+.table-area > .actions button {
+    width: 100%;
+    margin: 0;
+    padding: 9px 6px;
+    font-size: 12px;
+    line-height: 1.15;
+}
+
+@media(max-width:700px){
+    .table-area > .actions {
+        right: 4px;
+        width: 118px;
+        max-width: 118px;
+        padding: 5px;
+        gap: 5px;
+    }
+
+    .table-area > .actions button {
+        padding: 7px 4px;
+        font-size: 10px;
+    }
+}
+</style>
+
 </head>
 
 <body class="game-body">
@@ -1816,6 +1861,8 @@
 
     <div id="tableCards" class="table-cards"></div>
 
+    <div class="actions"></div>
+
   </section>
 
   <div id="tricks" class="tricks">
@@ -1823,8 +1870,6 @@
   </div>
 
   <div id="myHand" class="my-hand"></div>
-
-  <div class="actions"></div>
 
 </main>
 
@@ -1994,7 +2039,15 @@ function connect(){
   ws.onclose = () => {
 
     document.getElementById("message").textContent =
-      "ConexÃ£o encerrada.";
+      "Conexão perdida. Reconectando...";
+
+    if(state && code){
+      setTimeout(() => {
+        if(!ws || ws.readyState === WebSocket.CLOSED){
+          connect();
+        }
+      }, 1200);
+    }
 
   };
 
@@ -3280,4 +3333,8 @@ document.addEventListener("keydown", function(event){
 
 </body>
 </html>
+
+
+<style id='mobile-layout-ajuste'>@media (max-width:700px){.scoreboard{margin:55px auto 8px;gap:6px;flex-wrap:nowrap}.score-box{min-width:0;width:30%;padding:6px 4px;border-radius:10px;font-size:11px}.score-box .score{font-size:22px;margin-top:2px}#tableColorPanel{width:min(420px,92%);margin:4px auto 6px;padding:5px 8px;border-radius:10px}#tableColorPanel strong{font-size:10px!important}#tableColorSelector{margin-left:4px!important;padding:5px 7px!important;font-size:11px}.table-area{margin-top:4px!important;min-height:430px;padding:8px}}</style>
+
 
