@@ -239,6 +239,67 @@
   color: white;
 }
 
+.chat-panel {
+  width: min(760px, 94%);
+  margin: 10px auto;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.28);
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+.chat-title {
+  font-size: 14px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.chat-messages {
+  height: 110px;
+  overflow-y: auto;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgba(0,0,0,.22);
+  margin-bottom: 8px;
+}
+
+.chat-empty {
+  opacity: .55;
+  font-size: 12px;
+}
+
+.chat-message {
+  margin-bottom: 5px;
+  font-size: 13px;
+  word-break: break-word;
+}
+
+.chat-message strong {
+  color: #ffd54a;
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 7px;
+}
+
+.chat-input-row input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  border-radius: 9px;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.chat-input-row button {
+  border: 0;
+  border-radius: 9px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
 .signal-panel {
   width: min(760px, 94%);
   margin: 10px auto;
@@ -515,6 +576,209 @@
   ) !important;
   color: #fff !important;
 }
+
+
+<style id="signal-avatar-gestures">
+
+/* Movimento geral do avatar durante um sinal */
+.seat.signal-gesture-manilha .human-avatar,
+.seat.signal-gesture-boa .human-avatar,
+.seat.signal-gesture-ruim .human-avatar,
+.seat.signal-gesture-carta_alta .human-avatar,
+.seat.signal-gesture-carta_media .human-avatar,
+.seat.signal-gesture-carta_baixa .human-avatar,
+.seat.signal-gesture-truco .human-avatar,
+.seat.signal-gesture-segura .human-avatar {
+    animation: signalAvatarBody .75s ease-in-out;
+}
+
+/* MANILHA - m?o pr?xima ao rosto */
+.seat.signal-gesture-manilha .human-arm {
+    animation: signalManilha .85s ease-in-out;
+    transform-origin: left center;
+}
+
+/* BOA - bra?o levantando */
+.seat.signal-gesture-boa .human-arm {
+    animation: signalBoa .85s ease-in-out;
+    transform-origin: left center;
+}
+
+/* RUIM - gesto para baixo */
+.seat.signal-gesture-ruim .human-arm {
+    animation: signalRuim .85s ease-in-out;
+    transform-origin: left center;
+}
+
+/* CARTA ALTA - bra?o levantado */
+.seat.signal-gesture-carta_alta .human-arm {
+    animation: signalAlta .85s ease-in-out;
+    transform-origin: left center;
+}
+
+/* CARTA MEDIA - m?o no meio */
+.seat.signal-gesture-carta_media .human-arm {
+    animation: signalMedia .85s ease-in-out;
+    transform-origin: left center;
+}
+
+/* CARTA BAIXA - aponta para baixo */
+.seat.signal-gesture-carta_baixa .human-arm {
+    animation: signalBaixa .85s ease-in-out;
+    transform-origin: left center;
+}
+
+/* TRUCO - bate a m?o na mesa */
+.seat.signal-gesture-truco .human-arm {
+    animation: signalTruco .75s ease-in-out;
+    transform-origin: left center;
+}
+
+/* SEGURA - m?o levantada */
+.seat.signal-gesture-segura .human-arm {
+    animation: signalSegura .85s ease-in-out;
+    transform-origin: left center;
+}
+
+@keyframes signalAvatarBody {
+    0% {
+        transform: translateY(0) scale(1);
+    }
+    35% {
+        transform: translateY(-4px) scale(1.03);
+    }
+    70% {
+        transform: translateY(1px) scale(.99);
+    }
+    100% {
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes signalManilha {
+    0% {
+        transform: rotate(14deg);
+    }
+    35% {
+        transform: rotate(-48deg) translateY(-5px);
+    }
+    65% {
+        transform: rotate(-35deg) translateY(-2px);
+    }
+    100% {
+        transform: rotate(14deg);
+    }
+}
+
+@keyframes signalBoa {
+    0% {
+        transform: rotate(14deg);
+    }
+    35% {
+        transform: rotate(-72deg) translateX(-4px);
+    }
+    65% {
+        transform: rotate(-58deg);
+    }
+    100% {
+        transform: rotate(14deg);
+    }
+}
+
+@keyframes signalRuim {
+    0% {
+        transform: rotate(14deg);
+    }
+    35% {
+        transform: rotate(42deg) translateY(9px);
+    }
+    65% {
+        transform: rotate(32deg) translateY(5px);
+    }
+    100% {
+        transform: rotate(14deg);
+    }
+}
+
+@keyframes signalAlta {
+    0% {
+        transform: rotate(14deg);
+    }
+    35% {
+        transform: rotate(-82deg) translateX(-6px);
+    }
+    65% {
+        transform: rotate(-68deg);
+    }
+    100% {
+        transform: rotate(14deg);
+    }
+}
+
+@keyframes signalMedia {
+    0% {
+        transform: rotate(14deg);
+    }
+    35% {
+        transform: rotate(-8deg) translateX(16px);
+    }
+    65% {
+        transform: rotate(-2deg) translateX(12px);
+    }
+    100% {
+        transform: rotate(14deg);
+    }
+}
+
+@keyframes signalBaixa {
+    0% {
+        transform: rotate(14deg);
+    }
+    35% {
+        transform: rotate(62deg) translateY(12px);
+    }
+    65% {
+        transform: rotate(48deg) translateY(8px);
+    }
+    100% {
+        transform: rotate(14deg);
+    }
+}
+
+@keyframes signalTruco {
+    0% {
+        transform: rotate(14deg);
+    }
+    25% {
+        transform: rotate(-12deg) translateX(5px);
+    }
+    55% {
+        transform: rotate(35deg) translateX(20px) translateY(16px);
+    }
+    72% {
+        transform: rotate(45deg) translateX(22px) translateY(20px);
+    }
+    100% {
+        transform: rotate(14deg);
+    }
+}
+
+@keyframes signalSegura {
+    0% {
+        transform: rotate(14deg);
+    }
+    35% {
+        transform: rotate(-55deg) translateX(-3px);
+    }
+    65% {
+        transform: rotate(-48deg);
+    }
+    100% {
+        transform: rotate(14deg);
+    }
+}
+
+</style>
 
 </style>
 
@@ -1361,7 +1625,88 @@
 
   <div id="mao11Panel" class="mao11-panel hidden"></div>
 
-  <div id="signalPanel" class="signal-panel">
+  <div id="chatPanel" class="chat-panel">
+    <div class="chat-title">?? CONVERSA</div>
+
+    <div id="chatMessages" class="chat-messages">
+      <div class="chat-empty">Nenhuma mensagem ainda.</div>
+    </div>
+
+    <div class="chat-input-row">
+      <input
+        id="chatInput"
+        type="text"
+        maxlength="300"
+        placeholder="Digite uma mensagem..."
+        autocomplete="off"
+      >
+
+      <button type="button" onclick="iniciarMicrofone()" id="microphoneButton">
+        &#127908; FALAR
+      </button>
+
+      <button type="button" onclick="enviarChat()">
+        ENVIAR
+      </button>
+    </div>
+  </div>
+
+  <div id="tableColorPanel" style="
+  width:min(760px,94%);
+  margin:10px auto;
+  padding:10px 12px;
+  border-radius:16px;
+  background:rgba(0,0,0,.28);
+  border:1px solid rgba(255,255,255,.12);
+  text-align:center;
+">
+  <strong style="font-size:13px;">&#127922; COR DA MESA</strong>
+
+  <select
+    id="tableColorSelector"
+    onchange="mudarCorMesa(this.value)"
+    style="
+      margin-left:8px;
+      padding:7px 10px;
+      border-radius:8px;
+      border:0;
+      cursor:pointer;
+    "
+  >
+    <option value="verde">Verde cl?ssico</option>
+    <option value="verde_escuro">Verde escuro</option>
+    <option value="azul">Azul</option>
+    <option value="vermelho">Vermelho</option>
+    <option value="roxo">Roxo</option>
+    <option value="preto">Preto</option>
+  </select>
+</div>
+
+<div id="sharePanel" style="
+  width:min(760px,94%);
+  margin:10px auto;
+  text-align:center;
+">
+  <button
+    type="button"
+    id="whatsappShareButton"
+    onclick="compartilharWhatsApp()"
+    style="
+      border:0;
+      border-radius:12px;
+      padding:11px 18px;
+      cursor:pointer;
+      font-weight:900;
+      background:#25D366;
+      color:white;
+      font-size:14px;
+    "
+  >
+    &#128172; COMPARTILHAR NO WHATSAPP
+  </button>
+</div>
+
+<div id="signalPanel" class="signal-panel">
     <div class="signal-title">🤝 SINAIS PARA O PARCEIRO</div>
 
     <div class="signal-buttons">
@@ -1612,7 +1957,11 @@ function connect(){
 
     }
 
-    if(data.type === "partner_signal"){
+    if(data.type === "chat"){
+    mostrarMensagemChat(data);
+  }
+
+  if(data.type === "partner_signal"){
       mostrarSinalParceiro(data);
     }
 
@@ -1663,6 +2012,99 @@ function connect(){
    ============================== */
 
 
+let trucoAudioContext = null;
+
+function desbloquearAudioTruco(){
+
+  try{
+
+    const AudioCtx =
+      window.AudioContext ||
+      window.webkitAudioContext;
+
+    if(!AudioCtx){
+      return;
+    }
+
+    if(!trucoAudioContext){
+      trucoAudioContext = new AudioCtx();
+    }
+
+    if(trucoAudioContext.state === "suspended"){
+      trucoAudioContext.resume().catch(() => {});
+    }
+
+  }catch(e){
+
+    console.log("Audio Truco indispon?vel:", e);
+
+  }
+
+}
+
+function tocarSomTruco(valor){
+
+  try{
+
+    desbloquearAudioTruco();
+
+    if(!trucoAudioContext){
+      return;
+    }
+
+    if(trucoAudioContext.state === "suspended"){
+      return;
+    }
+
+    const agora = trucoAudioContext.currentTime;
+
+    const ganho = trucoAudioContext.createGain();
+    const oscilador = trucoAudioContext.createOscillator();
+
+    const frequencias = {
+      3: 440,
+      6: 520,
+      9: 620,
+      12: 740
+    };
+
+    oscilador.type = "square";
+    oscilador.frequency.setValueAtTime(
+      frequencias[Number(valor)] || 440,
+      agora
+    );
+
+    ganho.gain.setValueAtTime(0.0001, agora);
+    ganho.gain.exponentialRampToValueAtTime(0.18, agora + 0.015);
+    ganho.gain.exponentialRampToValueAtTime(0.0001, agora + 0.22);
+
+    oscilador.connect(ganho);
+    ganho.connect(trucoAudioContext.destination);
+
+    oscilador.start(agora);
+    oscilador.stop(agora + 0.23);
+
+  }catch(e){
+
+    console.log("Erro no som do Truco:", e);
+
+  }
+
+}
+
+// Desbloqueia o ?udio atrav?s da primeira intera??o real do jogador.
+document.addEventListener(
+  "pointerdown",
+  desbloquearAudioTruco,
+  { once: true }
+);
+
+document.addEventListener(
+  "keydown",
+  desbloquearAudioTruco,
+  { once: true }
+);
+
 function mostrarTrucoGrande(valor){
   const box = document.getElementById("trucoAnnouncement");
   const texto = document.getElementById("trucoAnnouncementText");
@@ -1679,6 +2121,9 @@ function mostrarTrucoGrande(valor){
   };
 
   texto.textContent = nomes[Number(valor)] || ("TRUCO " + valor + "!");
+
+  // Toca o som sem bloquear a anima??o ou o jogo.
+  tocarSomTruco(valor);
 
   box.classList.remove("show");
 
@@ -1746,6 +2191,41 @@ const signalLabels = {
   }
 };
 
+
+function animarSinalAvatar(seat, signal){
+
+  const avatar = document.getElementById(
+    "seat" + Number(seat)
+  );
+
+  if(!avatar){
+    return;
+  }
+
+  const classe = "signal-gesture-" + signal;
+
+  const classesAntigas = Array.from(
+    avatar.classList
+  ).filter(function(classeAtual){
+    return classeAtual.indexOf("signal-gesture-") === 0;
+  });
+
+  classesAntigas.forEach(function(classeAtual){
+    avatar.classList.remove(classeAtual);
+  });
+
+  /* Reinicia a anima??o mesmo se o mesmo sinal for apertado novamente */
+  void avatar.offsetWidth;
+
+  avatar.classList.add(classe);
+
+  setTimeout(function(){
+
+    avatar.classList.remove(classe);
+
+  }, 1000);
+}
+
 function enviarSinal(signal){
 
   if(!ws || ws.readyState !== WebSocket.OPEN){
@@ -1756,6 +2236,12 @@ function enviarSinal(signal){
     action: "signal",
     signal: signal
   }));
+
+  /* O jogador faz o gesto imediatamente */
+  animarSinalAvatar(
+    typeof meuSeat !== "undefined" ? meuSeat : 0,
+    signal
+  );
 
   const dados = signalLabels[signal];
 
@@ -1771,6 +2257,12 @@ function enviarSinal(signal){
 }
 
 function mostrarSinalParceiro(data){
+
+  /* O avatar do parceiro tamb?m executa o gesto */
+  animarSinalAvatar(
+    data.from_seat,
+    data.signal
+  );
 
   const dados = signalLabels[data.signal];
 
@@ -2533,6 +3025,257 @@ function render(){
 
 connect();
 
+</script>
+
+
+<script>
+
+
+function compartilharWhatsApp(){
+
+  const url = window.location.href;
+
+  const mensagem =
+    "&#127183; Vamos jogar Truco Mineiro comigo!&#10;&#10;" +
+    "Entre na minha sala pelo link:&#10;" +
+    url;
+
+  const whatsapp =
+    "https://wa.me/?text=" +
+    encodeURIComponent(mensagem);
+
+  window.open(
+    whatsapp,
+    "_blank",
+    "noopener,noreferrer"
+  );
+}
+
+function aplicarCorMesa(cor){
+
+  const mesa = document.querySelector(".table-area");
+
+  if(!mesa){
+    return;
+  }
+
+  const cores = {
+    verde: "#176b3a",
+    verde_escuro: "#0d4528",
+    azul: "#164b73",
+    vermelho: "#6b2020",
+    roxo: "#4b286b",
+    preto: "#202020"
+  };
+
+  mesa.style.setProperty(
+    "background",
+    cores[cor] || cores.verde,
+    "important"
+  );
+
+  mesa.style.setProperty(
+    "background-image",
+    "none",
+    "important"
+  );
+}
+
+function mudarCorMesa(cor){
+
+  aplicarCorMesa(cor);
+
+  try{
+    localStorage.setItem(
+      "truco_cor_mesa",
+      cor
+    );
+  }catch(e){
+    console.log("N?o foi poss?vel salvar a cor da mesa:", e);
+  }
+}
+
+function carregarCorMesa(){
+
+  let cor = "verde";
+
+  try{
+    cor =
+      localStorage.getItem("truco_cor_mesa") ||
+      "verde";
+  }catch(e){}
+
+  aplicarCorMesa(cor);
+
+  const seletor =
+    document.getElementById("tableColorSelector");
+
+  if(seletor){
+    seletor.value = cor;
+  }
+}
+
+document.addEventListener(
+  "DOMContentLoaded",
+  carregarCorMesa
+);
+
+function mostrarMensagemChat(data){
+
+  const box = document.getElementById("chatMessages");
+
+  if(!box){
+    return;
+  }
+
+  const vazio = box.querySelector(".chat-empty");
+
+  if(vazio){
+    vazio.remove();
+  }
+
+  const item = document.createElement("div");
+  item.className = "chat-message";
+
+  const nome = document.createElement("strong");
+  nome.textContent = (data.from_name || "Jogador") + ": ";
+
+  const texto = document.createElement("span");
+  texto.textContent = data.message || "";
+
+  item.appendChild(nome);
+  item.appendChild(texto);
+
+  box.appendChild(item);
+  box.scrollTop = box.scrollHeight;
+}
+
+
+function iniciarMicrofone(){
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if(!SpeechRecognition){
+    alert("Seu navegador n?o possui reconhecimento de voz.");
+    return;
+  }
+
+  if(window.reconhecimentoVozAtivo){
+    return;
+  }
+
+  const reconhecimento = new SpeechRecognition();
+
+  reconhecimento.lang = "pt-BR";
+  reconhecimento.continuous = false;
+  reconhecimento.interimResults = false;
+  reconhecimento.maxAlternatives = 1;
+
+  window.reconhecimentoVozAtivo = true;
+
+  const botao =
+    document.getElementById("microphoneButton");
+
+  if(botao){
+    botao.innerHTML = "&#128308; OUVINDO...";
+  }
+
+  reconhecimento.onresult = function(event){
+
+    const texto =
+      event.results &&
+      event.results[0] &&
+      event.results[0][0]
+        ? event.results[0][0].transcript.trim()
+        : "";
+
+    const input =
+      document.getElementById("chatInput");
+
+    if(input && texto){
+      input.value = texto;
+      input.focus();
+    }
+  };
+
+  reconhecimento.onerror = function(event){
+
+    console.log(
+      "Erro no reconhecimento de voz:",
+      event.error
+    );
+  };
+
+  reconhecimento.onend = function(){
+
+    window.reconhecimentoVozAtivo = false;
+
+    const botao =
+      document.getElementById("microphoneButton");
+
+    if(botao){
+      botao.innerHTML = "&#127908; FALAR";
+    }
+  };
+
+  try{
+    reconhecimento.start();
+  }catch(error){
+
+    window.reconhecimentoVozAtivo = false;
+
+    if(botao){
+      botao.innerHTML = "&#127908; FALAR";
+    }
+
+    console.log(
+      "Microfone indispon?vel:",
+      error
+    );
+  }
+}
+
+function enviarChat(){
+
+  if(!ws || ws.readyState !== WebSocket.OPEN){
+    return;
+  }
+
+  const input = document.getElementById("chatInput");
+
+  if(!input){
+    return;
+  }
+
+  const texto = input.value.trim();
+
+  if(!texto){
+    return;
+  }
+
+  ws.send(JSON.stringify({
+    action: "chat",
+    message: texto
+  }));
+
+  input.value = "";
+  input.focus();
+}
+
+document.addEventListener("keydown", function(event){
+
+  if(
+    event.target &&
+    event.target.id === "chatInput" &&
+    event.key === "Enter"
+  ){
+    event.preventDefault();
+    enviarChat();
+  }
+
+});
 </script>
 
 </body>

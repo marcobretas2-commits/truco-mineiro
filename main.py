@@ -1521,6 +1521,25 @@ async def websocket_endpoint(websocket: WebSocket, code: str):
                     "signal": sinal
                 })
 
+            elif action == "chat":
+                texto = str(msg.get("message", "")).strip()[:300]
+
+                if not texto:
+                    continue
+
+                # Envia a mensagem para todos os jogadores da sala.
+                for jogador in room.players.values():
+                    if jogador.ws:
+                        try:
+                            await jogador.ws.send_json({
+                                "type": "chat",
+                                "from_seat": p.seat,
+                                "from_name": p.name,
+                                "message": texto
+                            })
+                        except Exception:
+                            pass
+
             elif action == "ping":
                 await websocket.send_json({"type": "pong"})
 
