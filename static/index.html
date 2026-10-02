@@ -366,6 +366,75 @@
         </section>
 
 
+        <!-- LOBBY -->
+        <section id="lobbySection" class="hidden">
+
+            <h2>🎴 Lobby do Truco</h2>
+
+            <div id="lobbyMessage" class="message"></div>
+
+            <div class="tutorial-box">
+
+                <h3>📖 COMO JOGAR TRUCO MINEIRO</h3>
+
+                <p><strong>🎯 Objetivo:</strong> sua dupla precisa chegar a 12 pontos.</p>
+
+                <p><strong>👥 Duplas:</strong> são 4 jogadores formando 2 duplas.</p>
+
+                <p><strong>🃏 Cartas:</strong> cada jogador recebe 3 cartas e joga uma por vez.</p>
+
+                <p><strong>🏆 Vazas:</strong> a mão pode ter até 3 vazas. A dupla que vencer as vazas necessárias ganha a mão.</p>
+
+                <p><strong>🔥 Truco:</strong> o valor pode aumentar para 3, 6, 9 ou 12 pontos.</p>
+
+                <p><strong>✅ Aceitar:</strong> continua a disputa pelo novo valor.</p>
+
+                <p><strong>🏃 Correr:</strong> desiste da mão e entrega os pontos correspondentes ao adversário.</p>
+
+                <p><strong>📈 Aumentar:</strong> você pode aumentar a aposta quando permitido.</p>
+
+                <p><strong>🖐️ Mão de 11:</strong> quando uma dupla chega a 11 pontos, aplica-se a regra especial da mão de 11.</p>
+
+                <p><strong>🤝 Sinais:</strong> você pode enviar sinais para seu parceiro durante a partida.</p>
+
+                <p><strong>💡 Como jogar:</strong> entre em uma sala, aguarde os jogadores, receba suas cartas e jogue quando for sua vez.</p>
+
+            </div>
+
+            <button class="btn-primary" onclick="jogarComQualquerPessoa()">
+                🎮 JOGAR COM QUALQUER PESSOA
+            </button>
+
+            <button class="btn-secondary" onclick="criarSalaAmigos()" style="margin-top:10px;">
+                👥 CRIAR SALA COM AMIGOS
+            </button>
+
+            <div class="room" style="margin-top:20px;">
+
+                <div class="room-title">
+                    🔗 ENTRAR EM UMA SALA
+                </div>
+
+                <input
+                    id="codigoSalaLobby"
+                    type="text"
+                    maxlength="10"
+                    placeholder="Código da sala"
+                    style="text-transform:uppercase;"
+                >
+
+                <button class="btn-secondary" onclick="entrarSalaLobby()">
+                    ENTRAR NA SALA
+                </button>
+
+            </div>
+
+            <div class="links" style="margin-top:18px;">
+                <button onclick="sairDoLobby()">Sair da conta</button>
+            </div>
+
+        </section>
+
         <!-- SALA -->
         <div class="room">
 
@@ -406,6 +475,7 @@ function esconderTudo(){
     document.getElementById("loginSection").classList.add("hidden");
     document.getElementById("cadastroSection").classList.add("hidden");
     document.getElementById("recuperacaoSection").classList.add("hidden");
+    document.getElementById("lobbySection").classList.add("hidden");
 
 }
 
@@ -472,65 +542,14 @@ async function fazerLogin(){
 
         mostrarMensagem(
             "loginMessage",
-            "Informe o e-mail e a senha.",
-            false
-        );
-
-        return;
-    }
-
-
-    try{
-
-        const resposta = await fetch("/api/login", {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-                email: email,
-                senha: senha
-            })
-
-        });
-
-
-        const dados = await resposta.json();
-
-
-        if(!dados.ok){
-
-            mostrarMensagem(
-                "loginMessage",
-                dados.erro || "Não foi possível entrar.",
-                false
-            );
-
-            return;
-        }
-
-
-        usuarioLogado = dados.usuario;
-
-        localStorage.setItem(
-            "truco_usuario",
-            JSON.stringify(usuarioLogado)
-        );
-
-
-        mostrarMensagem(
-            "loginMessage",
-            "Login realizado! Entrando no jogo...",
+            "Login realizado! Escolha como você quer jogar.",
             true
         );
 
 
         setTimeout(() => {
 
-            entrarNoJogo();
+            mostrarLobby();
 
         }, 500);
 
@@ -892,6 +911,66 @@ async function redefinirSenha(){
 }
 
 
+function mostrarLobby(){
+
+    esconderTudo();
+
+    const lobby = document.getElementById("lobbySection");
+
+    if(lobby){
+        lobby.classList.remove("hidden");
+    }
+
+    const nome = usuarioLogado?.nome || "Jogador";
+    const mensagem = document.getElementById("lobbyMessage");
+
+    if(mensagem){
+        mensagem.textContent =
+            "Olá, " + nome + "! Escolha como você quer jogar.";
+        mensagem.className = "message success";
+    }
+}
+
+function jogarComQualquerPessoa(){
+
+    entrarNoJogo();
+
+}
+
+function criarSalaAmigos(){
+
+    entrarNoJogo();
+
+}
+
+function entrarSalaLobby(){
+
+    const campo = document.getElementById("codigoSalaLobby");
+
+    if(!campo){
+        return;
+    }
+
+    const codigo = campo.value.trim().toUpperCase();
+
+    if(!codigo){
+        alert("Digite o código da sala.");
+        return;
+    }
+
+    entrarNoJogo(codigo);
+
+}
+
+function sairDoLobby(){
+
+    usuarioLogado = null;
+
+    localStorage.removeItem("truco_usuario");
+
+    mostrarLogin();
+
+}
 function entrarSala(){
 
     const codigo = document
@@ -994,11 +1073,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
             usuarioLogado = JSON.parse(usuario);
 
+            if(usuarioLogado && usuarioLogado.id){
+
+                mostrarLobby();
+
+            }else{
+
+                localStorage.removeItem("truco_usuario");
+                usuarioLogado = null;
+                mostrarLogin();
+
+            }
+
         }catch(e){
 
             localStorage.removeItem("truco_usuario");
+            usuarioLogado = null;
+            mostrarLogin();
 
         }
+
+    }else{
+
+        mostrarLogin();
 
     }
 
@@ -1008,3 +1105,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
+
+
+
+
+
+
+
