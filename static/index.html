@@ -539,33 +539,54 @@ async function fazerLogin(){
     const senha = document.getElementById("loginSenha").value;
 
     if(!email || !senha){
+        mostrarMensagem("loginMessage", "Informe o e-mail e a senha.", false);
+        return;
+    }
+
+    try{
+        const resposta = await fetch("/api/login", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({email: email, senha: senha})
+        });
+
+        const dados = await resposta.json();
+
+        if(!dados.ok){
+            mostrarMensagem(
+                "loginMessage",
+                dados.erro || "E-mail ou senha incorretos.",
+                false
+            );
+            return;
+        }
+
+        usuarioLogado = dados.usuario;
+
+        localStorage.setItem(
+            "truco_usuario",
+            JSON.stringify(usuarioLogado)
+        );
 
         mostrarMensagem(
             "loginMessage",
-            "Login realizado! Escolha como você quer jogar.",
+            "Login realizado! Escolha como voc? quer jogar.",
             true
         );
 
-
         setTimeout(() => {
-
             mostrarLobby();
-
         }, 500);
 
-
     }catch(erro){
-
+        console.error(erro);
         mostrarMensagem(
             "loginMessage",
-            "Erro de conexão com o servidor.",
+            "Erro de conex?o com o servidor.",
             false
         );
-
     }
-
 }
-
 
 async function fazerCadastro(){
 

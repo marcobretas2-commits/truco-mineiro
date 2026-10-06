@@ -348,16 +348,17 @@
 .partner-signal {
   position: fixed;
   left: 50%;
-  top: 18%;
+  top: 8%;
   transform: translateX(-50%);
-  z-index: 9999;
-  padding: 16px 24px;
-  border-radius: 18px;
-  background: rgba(20,20,20,.96);
+  z-index: 300;
+  padding: 9px 16px;
+  border-radius: 14px;
+  background: rgba(20,20,20,.94);
   border: 2px solid rgba(255,255,255,.25);
-  box-shadow: 0 12px 40px rgba(0,0,0,.45);
+  box-shadow: 0 8px 24px rgba(0,0,0,.4);
   text-align: center;
   animation: signalPop .25s ease-out;
+  pointer-events: none;
 }
 
 .partner-signal-name {
@@ -980,7 +981,7 @@
 }
 
 .seat-3 {
-    right: 8px;
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
 }
@@ -1393,7 +1394,7 @@
     width: 70px;
     height: 54px;
     left: 8px;
-    top: 72px;
+    top: 50%;
     border-radius: 32px 32px 12px 12px;
     z-index: 2;
     box-shadow:
@@ -2292,7 +2293,7 @@ function enviarSinal(signal){
 
   /* O jogador faz o gesto imediatamente */
   animarSinalAvatar(
-    typeof meuSeat !== "undefined" ? meuSeat : 0,
+    typeof mySeat !== "undefined" && mySeat !== null ? mySeat : 0,
     signal
   );
 
@@ -2849,7 +2850,7 @@ function render(){
     document.getElementById("mao11Panel");
 
   const botoes =
-    document.querySelector(".actions");
+    document.querySelector(".table-area > .actions");
 
   if(!mao11Panel || !botoes) return;
 
@@ -3336,5 +3337,11 @@ document.addEventListener("keydown", function(event){
 
 
 <style id='mobile-layout-ajuste'>@media (max-width:700px){.scoreboard{margin:55px auto 8px;gap:6px;flex-wrap:nowrap}.score-box{min-width:0;width:30%;padding:6px 4px;border-radius:10px;font-size:11px}.score-box .score{font-size:22px;margin-top:2px}#tableColorPanel{width:min(420px,92%);margin:4px auto 6px;padding:5px 8px;border-radius:10px}#tableColorPanel strong{font-size:10px!important}#tableColorSelector{margin-left:4px!important;padding:5px 7px!important;font-size:11px}.table-area{margin-top:4px!important;min-height:430px;padding:8px}}</style>
+
+
+
+
+
+
 
 
