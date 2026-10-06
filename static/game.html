@@ -1633,7 +1633,7 @@
 }
 </style>
 
-</head>
+<style id="truco-impacto-visual">@keyframes trucoMesaImpacto{0%{transform:translate(0,0) rotate(0)}18%{transform:translate(-5px,2px) rotate(-.5deg)}36%{transform:translate(5px,-2px) rotate(.5deg)}54%{transform:translate(-3px,1px) rotate(-.3deg)}72%{transform:translate(3px,-1px) rotate(.3deg)}100%{transform:translate(0,0) rotate(0)}}.table-area.truco-impacto{animation:trucoMesaImpacto .5s ease-out}</style></head>
 
 <body class="game-body">
 
@@ -2097,9 +2097,7 @@ function desbloquearAudioTruco(){
 }
 
 function tocarSomTruco(valor){
-
   try{
-
     desbloquearAudioTruco();
 
     if(!trucoAudioContext){
@@ -2107,58 +2105,77 @@ function tocarSomTruco(valor){
     }
 
     if(trucoAudioContext.state === "suspended"){
-      return;
+      trucoAudioContext.resume().catch(() => {});
     }
 
     const agora = trucoAudioContext.currentTime;
 
-    const ganho = trucoAudioContext.createGain();
-    const oscilador = trucoAudioContext.createOscillator();
+    const ganhoMesa = trucoAudioContext.createGain();
+    const osciladorMesa = trucoAudioContext.createOscillator();
 
-    const frequencias = {
-      3: 440,
-      6: 520,
-      9: 620,
-      12: 740
-    };
+    osciladorMesa.type = "square";
+    osciladorMesa.frequency.setValueAtTime(95, agora);
+    osciladorMesa.frequency.exponentialRampToValueAtTime(48, agora + 0.16);
 
-    oscilador.type = "square";
-    oscilador.frequency.setValueAtTime(
-      frequencias[Number(valor)] || 440,
-      agora
-    );
+    ganhoMesa.gain.setValueAtTime(0.001, agora);
+    ganhoMesa.gain.exponentialRampToValueAtTime(0.75, agora + 0.012);
+    ganhoMesa.gain.exponentialRampToValueAtTime(0.001, agora + 0.18);
 
-    ganho.gain.setValueAtTime(0.0001, agora);
-    ganho.gain.exponentialRampToValueAtTime(0.18, agora + 0.015);
-    ganho.gain.exponentialRampToValueAtTime(0.0001, agora + 0.22);
+    osciladorMesa.connect(ganhoMesa);
+    ganhoMesa.connect(trucoAudioContext.destination);
+    osciladorMesa.start(agora);
+    osciladorMesa.stop(agora + 0.2);
 
-    oscilador.connect(ganho);
-    ganho.connect(trucoAudioContext.destination);
+    const ganhoImpacto = trucoAudioContext.createGain();
+    const impacto = trucoAudioContext.createOscillator();
 
-    oscilador.start(agora);
-    oscilador.stop(agora + 0.23);
+    impacto.type = "triangle";
+    impacto.frequency.setValueAtTime(180, agora);
+    impacto.frequency.exponentialRampToValueAtTime(70, agora + 0.22);
+
+    ganhoImpacto.gain.setValueAtTime(0.001, agora);
+    ganhoImpacto.gain.exponentialRampToValueAtTime(0.55, agora + 0.01);
+    ganhoImpacto.gain.exponentialRampToValueAtTime(0.001, agora + 0.22);
+
+    impacto.connect(ganhoImpacto);
+    ganhoImpacto.connect(trucoAudioContext.destination);
+    impacto.start(agora);
+    impacto.stop(agora + 0.23);
+
+    if("speechSynthesis" in window){
+      window.speechSynthesis.cancel();
+
+      const fala = new SpeechSynthesisUtterance(
+        Number(valor) === 3 ? "TRUUUUCO!" :
+        Number(valor) === 6 ? "SEIS!" :
+        Number(valor) === 9 ? "NOVE!" :
+        "DOZE!"
+      );
+
+      fala.lang = "pt-BR";
+      fala.volume = 1;
+      fala.rate = Number(valor) === 3 ? 0.72 : 0.82;
+      fala.pitch = 0.72;
+
+      window.speechSynthesis.speak(fala);
+    }
+
+    const mesa = document.querySelector(".table-area");
+
+    if(mesa){
+      mesa.classList.remove("truco-impacto");
+      void mesa.offsetWidth;
+      mesa.classList.add("truco-impacto");
+
+      setTimeout(() => {
+        mesa.classList.remove("truco-impacto");
+      }, 500);
+    }
 
   }catch(e){
-
     console.log("Erro no som do Truco:", e);
-
   }
-
 }
-
-// Desbloqueia o ?udio atrav?s da primeira intera??o real do jogador.
-document.addEventListener(
-  "pointerdown",
-  desbloquearAudioTruco,
-  { once: true }
-);
-
-document.addEventListener(
-  "keydown",
-  desbloquearAudioTruco,
-  { once: true }
-);
-
 function mostrarTrucoGrande(valor){
   const box = document.getElementById("trucoAnnouncement");
   const texto = document.getElementById("trucoAnnouncementText");
@@ -3337,6 +3354,11 @@ document.addEventListener("keydown", function(event){
 
 
 <style id='mobile-layout-ajuste'>@media (max-width:700px){.scoreboard{margin:55px auto 8px;gap:6px;flex-wrap:nowrap}.score-box{min-width:0;width:30%;padding:6px 4px;border-radius:10px;font-size:11px}.score-box .score{font-size:22px;margin-top:2px}#tableColorPanel{width:min(420px,92%);margin:4px auto 6px;padding:5px 8px;border-radius:10px}#tableColorPanel strong{font-size:10px!important}#tableColorSelector{margin-left:4px!important;padding:5px 7px!important;font-size:11px}.table-area{margin-top:4px!important;min-height:430px;padding:8px}}</style>
+
+
+
+
+
 
 
 
