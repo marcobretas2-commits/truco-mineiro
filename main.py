@@ -1410,37 +1410,36 @@ async def websocket_endpoint(websocket: WebSocket, code: str):
         await websocket.close()
         return
 
-    # Se o jogador voltou com o mesmo nome, reutiliza a cadeira anterior.
-    existing_seat = next(
-        (seat for seat, jogador in room.players.items() if jogador.name == name),
-        None
+    human_players = [j for j in room.players.values() if not j.bot]
+
+    if len(human_players) >= 4:
+        await websocket.send_json({
+            "type": "error",
+            "message": "Esta sala ja tem quatro jogadores humanos."
+        })
+        await websocket.close()
+        return
+
+    # Ordem de entrada: primeiro a dupla 0/2, depois a dupla 1/3.
+    seat_order = [0, 2, 1, 3]
+    free_seat = seat_order[len(human_players)]
+
+    # Se houver uma IA nesse lugar, o humano assume o assento.
+    jogador_anterior = room.players.get(free_seat)
+    cartas_herdadas = (
+        list(jogador_anterior.hand)
+        if jogador_anterior and jogador_anterior.bot
+        else []
     )
 
-    if existing_seat is not None:
-        free_seat = existing_seat
-        jogador_existente = room.players[free_seat]
-        jogador_existente.sid = sid
-        jogador_existente.ws = websocket
-        jogador_existente.name = name
-        p = jogador_existente
-    else:
-        free_seat = next((s for s in range(4) if s not in room.players), None)
-
-        if free_seat is None:
-            await websocket.send_json({
-                "type": "error",
-                "message": "Sala cheia."
-            })
-            await websocket.close()
-            return
-
-        p = Player(
-            sid=sid,
-            name=name,
-            seat=free_seat,
-            ws=websocket
-        )
-        room.players[free_seat] = p
+    p = Player(
+        sid=sid,
+        name=name,
+        seat=free_seat,
+        ws=websocket,
+        hand=cartas_herdadas
+    )
+    room.players[free_seat] = p
 
     room.sockets[sid] = websocket
 
@@ -1457,19 +1456,17 @@ async def websocket_endpoint(websocket: WebSocket, code: str):
             action = msg.get("action")
 
             if action == "start":
-                room.fill_bots()
+                if room.hand_stage == "waiting":
+                    room.fill_bots()
+                    room.start_hand()
 
-                if room.start_hand():
-                    # Inicia o loop da IA automaticamente.
-                    if not hasattr(room, "_bot_task") or room._bot_task.done():
-                        room._bot_task = asyncio.create_task(bot_loop(room))
+                # Garante que o ciclo das IAs esteja ativo sem
+                # distribuir novas cartas a cada jogador que entrar.
+                if not hasattr(room, "_bot_task") or room._bot_task.done():
+                    room._bot_task = asyncio.create_task(bot_loop(room))
 
-                    await broadcast(room)
-                else:
-                    await websocket.send_json({
-                        "type": "error",
-                        "message": "NÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o foi possÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­vel iniciar a partida."
-                    })
+                await broadcast(room)
+
             elif action == "play":
                 result = room.play_card(p.seat, int(msg.get("index", -1)))
                 if not result["ok"]:
@@ -1577,7 +1574,6 @@ async def websocket_endpoint(websocket: WebSocket, code: str):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
-
 
 
 
