@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -1633,7 +1633,40 @@
 }
 </style>
 
-<style id="truco-impacto-visual">@keyframes trucoMesaImpacto{0%{transform:translate(0,0) rotate(0)}18%{transform:translate(-5px,2px) rotate(-.5deg)}36%{transform:translate(5px,-2px) rotate(.5deg)}54%{transform:translate(-3px,1px) rotate(-.3deg)}72%{transform:translate(3px,-1px) rotate(.3deg)}100%{transform:translate(0,0) rotate(0)}}.table-area.truco-impacto{animation:trucoMesaImpacto .5s ease-out}</style></head>
+<style id="truco-impacto-visual">@keyframes trucoMesaImpacto{0%{transform:translate(0,0) rotate(0)}18%{transform:translate(-5px,2px) rotate(-.5deg)}36%{transform:translate(5px,-2px) rotate(.5deg)}54%{transform:translate(-3px,1px) rotate(-.3deg)}72%{transform:translate(3px,-1px) rotate(.3deg)}100%{transform:translate(0,0) rotate(0)}}.table-area.truco-impacto{animation:trucoMesaImpacto .5s ease-out}</style><style id="acoes-truco-inferiores">
+.actions {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: min(900px, 96%);
+  margin: 12px auto 20px;
+  z-index: 20;
+}
+.actions .truco-response,
+.actions .truco-buttons {
+  position: static;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+.actions .truco-buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.actions .truco-buttons button {
+  position: static;
+  margin: 0;
+}
+</style>
+</head>
 
 <body class="game-body">
 
@@ -1862,9 +1895,9 @@
 
     <div id="tableCards" class="table-cards"></div>
 
-    <div class="actions"></div>
-
   </section>
+
+  <div class="actions"></div>
 
   <div id="tricks" class="tricks">
     Vazas: 0 x 0
@@ -2867,7 +2900,7 @@ function render(){
     document.getElementById("mao11Panel");
 
   const botoes =
-    document.querySelector(".table-area > .actions");
+    document.querySelector(".actions");
 
   if(!mao11Panel || !botoes) return;
 

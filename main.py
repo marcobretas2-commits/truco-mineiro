@@ -1,4 +1,4 @@
-﻿from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -1445,7 +1445,7 @@ async def websocket_endpoint(websocket: WebSocket, code: str):
 
     await websocket.send_json({
         "type": "joined",
-        "seat": free_seat,
+        "seat": p.seat,
         "code": code
     })
     await broadcast(room)
