@@ -1932,12 +1932,35 @@
 const params = new URLSearchParams(location.search);
 const code = location.pathname.split("/").filter(Boolean).pop() || "";
 
-const name =
-  params.get("name") ||
-  localStorage.getItem("truco_name") ||
-  ("Jogador " + Math.floor(Math.random() * 999));
+const nomeUrl = (params.get("nome") || params.get("name") || "").trim();
+const nomeSalvo = (localStorage.getItem("truco_name") || "").trim();
 
+let usuarioLogado = null;
+try {
+  usuarioLogado = JSON.parse(localStorage.getItem("truco_usuario") || "null");
+} catch (e) {
+  usuarioLogado = null;
+}
+
+const nomeConta = String(usuarioLogado?.nome || "").trim();
+let name = nomeUrl || nomeConta || nomeSalvo || "Jogador";
+name = name.trim().slice(0, 20) || "Jogador";
 localStorage.setItem("truco_name", name);
+let playerId = localStorage.getItem("truco_player_id");
+
+if (!playerId) {
+  playerId = (
+    window.crypto && typeof window.crypto.randomUUID === "function"
+  )
+    ? window.crypto.randomUUID()
+    : (
+        Date.now().toString(36) + "-" +
+        Math.random().toString(36).slice(2) + "-" +
+        Math.random().toString(36).slice(2)
+      );
+
+  localStorage.setItem("truco_player_id", playerId);
+}
 
 let mySeat = null;
 let ws = null;
@@ -1964,7 +1987,8 @@ function connect(){
   ws.onopen = () => {
 
     ws.send(JSON.stringify({
-      name: name
+      name: name,
+      player_id: playerId
     }));
 
   };

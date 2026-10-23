@@ -64,6 +64,7 @@ class Player:
     bot: bool = False
     hand: List[Card] = field(default_factory=list)
     ws: Optional[WebSocket] = None
+    client_id: str = ""
 
     @property
     def team(self):
@@ -651,7 +652,7 @@ class Room:
 
         # A m?o continua a partir do jogador seguinte
         # ao ?ltimo jogador que fez o pedido/aumento.
-        self.current_player = raiser
+        self.current_player = (raiser + 1) % 4
 
         print(
             f"[TRUCO] Pedido de {requested_value} aceito. "
@@ -660,84 +661,6 @@ class Room:
 
         return {"ok": True}
 
-
-    def answer_raise(self, seat, accept):
-        if self.hand_stage != "raise":
-            return {
-                "ok": False,
-                "error": "NÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o hÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ pedido de truco."
-            }
-
-        p = self.players.get(seat)
-
-        if not p:
-            return {
-                "ok": False,
-                "error": "Jogador nÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o encontrado."
-            }
-
-        # Somente a dupla adversÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ria pode responder
-        if p.team == self.pending_team:
-            return {
-                "ok": False,
-                "error": "A resposta ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â© da dupla adversÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ria."
-            }
-
-        raiser = self.pending_raiser
-        requested_value = self.pending_raise
-        requesting_team = self.pending_team
-
-        if raiser is None or requested_value is None:
-            return {
-                "ok": False,
-                "error": "Pedido de truco invÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡lido."
-            }
-
-        # ---------------------------------
-        # CORREU
-        # ---------------------------------
-
-        if not accept:
-            winner = requesting_team
-
-            # Se recusou, quem pediu recebe
-            # o valor anterior da mÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o.
-            self.scores[winner] += self.hand_value
-
-            self.hand_winner_team = winner
-            self.hand_stage = "finished"
-
-            self.winner_message = (
-                f"Dupla {winner + 1} pediu "
-                f"{requested_value} e a adversÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ria correu."
-            )
-
-            self.pending_raise = None
-            self.pending_team = None
-            self.pending_raiser = None
-
-            return {"ok": True}
-
-        # ---------------------------------
-        # ACEITOU
-        # ---------------------------------
-
-        self.hand_value = requested_value
-
-        self.pending_raise = None
-        self.pending_team = None
-        self.pending_raiser = None
-
-        self.hand_stage = "playing"
-
-        # IMPORTANTE:
-        # Depois que o truco ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â© aceito, nÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o deixamos
-        # o mesmo jogador pedir outro truco imediatamente.
-        #
-        # A vez passa para o jogador seguinte.
-        self.current_player = raiser
-
-        return {"ok": True}
 
     def responder_mao11(self, seat, jogar):
         if not self.mao11_ativa:
@@ -1403,43 +1326,100 @@ async def websocket_endpoint(websocket: WebSocket, code: str):
         return
 
     sid = "".join(random.choices(string.ascii_letters + string.digits, k=16))
+
     try:
         msg = await websocket.receive_json()
         name = str(msg.get("name", "Jogador")).strip()[:20] or "Jogador"
+        client_id = str(msg.get("player_id", "")).strip()[:80]
     except Exception:
         await websocket.close()
         return
 
-    human_players = [j for j in room.players.values() if not j.bot]
-
-    if len(human_players) >= 4:
-        await websocket.send_json({
-            "type": "error",
-            "message": "Esta sala ja tem quatro jogadores humanos."
-        })
-        await websocket.close()
-        return
-
-    # Ordem de entrada: primeiro a dupla 0/2, depois a dupla 1/3.
-    seat_order = [0, 2, 1, 3]
-    free_seat = seat_order[len(human_players)]
-
-    # Se houver uma IA nesse lugar, o humano assume o assento.
-    jogador_anterior = room.players.get(free_seat)
-    cartas_herdadas = (
-        list(jogador_anterior.hand)
-        if jogador_anterior and jogador_anterior.bot
-        else []
+    # Reconhece quem esta voltando a uma partida existente.
+    jogador_existente = next(
+        (
+            jogador
+            for jogador in room.players.values()
+            if not jogador.bot
+            and client_id
+            and jogador.client_id == client_id
+        ),
+        None
     )
 
-    p = Player(
-        sid=sid,
-        name=name,
-        seat=free_seat,
-        ws=websocket,
-        hand=cartas_herdadas
-    )
-    room.players[free_seat] = p
+    if jogador_existente:
+        sid_anterior = jogador_existente.sid
+        ws_anterior = jogador_existente.ws
+
+        room.sockets.pop(sid_anterior, None)
+
+        jogador_existente.sid = sid
+        jogador_existente.name = name
+        jogador_existente.ws = websocket
+        p = jogador_existente
+
+        # Encerra a conexao antiga sem remover a nova.
+        if ws_anterior is not None and ws_anterior is not websocket:
+            try:
+                await ws_anterior.close(
+                    code=4001,
+                    reason="Sessao reconectada"
+                )
+            except Exception:
+                pass
+
+    else:
+        # Ordem: dupla 0/2 primeiro, depois dupla 1/3.
+        seat_order = [0, 2, 1, 3]
+
+        human_players = [
+            jogador
+            for jogador in room.players.values()
+            if not jogador.bot
+        ]
+
+        if len(human_players) >= 4:
+            await websocket.send_json({
+                "type": "error",
+                "message": "Esta sala ja tem quatro jogadores humanos."
+            })
+            await websocket.close()
+            return
+
+        # Usa um assento vazio ou substitui uma IA.
+        free_seat = next(
+            (
+                seat for seat in seat_order
+                if seat not in room.players or room.players[seat].bot
+            ),
+            None
+        )
+
+        if free_seat is None:
+            await websocket.send_json({
+                "type": "error",
+                "message": "Nao ha assentos disponiveis nesta sala."
+            })
+            await websocket.close()
+            return
+
+        jogador_anterior = room.players.get(free_seat)
+        cartas_herdadas = (
+            list(jogador_anterior.hand)
+            if jogador_anterior and jogador_anterior.bot
+            else []
+        )
+
+        p = Player(
+            sid=sid,
+            name=name,
+            seat=free_seat,
+            ws=websocket,
+            hand=cartas_herdadas,
+            client_id=client_id
+        )
+
+        room.players[free_seat] = p
 
     room.sockets[sid] = websocket
 
